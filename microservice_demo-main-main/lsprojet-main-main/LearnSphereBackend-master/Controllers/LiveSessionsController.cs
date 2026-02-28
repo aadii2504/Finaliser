@@ -54,8 +54,11 @@ public class LiveSessionsController : ControllerBase
         var session = await _db.LiveSessions.FindAsync(id);
         if (session == null) return NotFound("Live session not found.");
 
-        // We still let them join right around EndTime (or even if it's past, depending on strictness)
-        // Let's rely on the frontend to only show "Join Now" when it's appropriate.
+        // Only track attendance if we are BEFORE the session has ended.
+        if (DateTime.UtcNow > session.EndTime)
+        {
+            return Ok(new { joined = false, message = "Session has passed. Video recording is available but attendance is not recorded." });
+        }
 
         var existing = await _db.LiveSessionAttendances
             .FirstOrDefaultAsync(a => a.LiveSessionId == id && a.StudentId == student.Id);

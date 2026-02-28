@@ -8,7 +8,11 @@ import React, {
 } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Sidebar from "../components/Dashboard/Sidebar";
-import { enrollCourse, subscribe, getSnapshot } from "../components/EnrollmentStore";
+import {
+  enrollCourse,
+  subscribe,
+  getSnapshot,
+} from "../components/EnrollmentStore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { courseApi, liveSessionApi } from "../api/courseApi";
@@ -20,7 +24,7 @@ export const DashboardPage = () => {
   try {
     const user = JSON.parse(localStorage.getItem("learnsphere_user") ?? "null");
     if (user?.name) name = user.name;
-  } catch { }
+  } catch {}
 
   const sidebarShellRef = useRef(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -58,21 +62,26 @@ export const DashboardPage = () => {
       try {
         const [courseData, liveData] = await Promise.all([
           courseApi.getAll(),
-          liveSessionApi.getAll().catch(() => [])
+          liveSessionApi.getAll().catch(() => []),
         ]);
         setCourses(courseData || []);
 
         const normalizeDate = (isoString) => {
           if (!isoString) return new Date();
-          const normalized = isoString.includes("Z") || isoString.includes("+") ? isoString : isoString + "Z";
+          const normalized =
+            isoString.includes("Z") || isoString.includes("+")
+              ? isoString
+              : isoString + "Z";
           return new Date(normalized);
         };
 
         // Transform backend dates and set isLive based on current time
         const now = new Date();
-        const mappedSessions = (liveData || []).map(s => ({
+        const mappedSessions = (liveData || []).map((s) => ({
           ...s,
-          isLive: now >= normalizeDate(s.startTime) && now <= normalizeDate(s.endTime)
+          isLive:
+            now >= normalizeDate(s.startTime) &&
+            now <= normalizeDate(s.endTime),
         }));
         setLiveSessions(mappedSessions);
       } catch (err) {
@@ -115,7 +124,12 @@ export const DashboardPage = () => {
   const normalizeDate = (isoString) => {
     if (!isoString) return new Date();
     const s = String(isoString);
-    const normalized = s.includes("Z") || s.includes("+") || (s.includes("-") && s.indexOf("-", 5) > 0) ? s : s + "Z";
+    const normalized =
+      s.includes("Z") ||
+      s.includes("+") ||
+      (s.includes("-") && s.indexOf("-", 5) > 0)
+        ? s
+        : s + "Z";
     return new Date(normalized);
   };
 
@@ -128,7 +142,7 @@ export const DashboardPage = () => {
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true
+        hour12: true,
       });
     } catch {
       return iso;
@@ -136,9 +150,8 @@ export const DashboardPage = () => {
   };
 
   const filteredLive = useMemo(() => {
-    const list = liveSessions.filter(
-      (s) =>
-        s.title.toLowerCase().includes(query.toLowerCase())
+    const list = liveSessions.filter((s) =>
+      s.title.toLowerCase().includes(query.toLowerCase()),
     );
     return sortKey === "az"
       ? [...list].sort((a, b) => a.title.localeCompare(b.title))
@@ -183,7 +196,9 @@ export const DashboardPage = () => {
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold">Welcome, {name}!</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                Welcome, {name}!
+              </h2>
               <p className="mt-1 text-sm opacity-70">
                 Continue learning and explore new courses.
               </p>
@@ -220,7 +235,9 @@ export const DashboardPage = () => {
           {/* Live Sessions */}
           <div className="mt-8 sm:mt-12">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base sm:text-lg font-semibold">Live Sessions</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Live Sessions
+              </h3>
               <Link
                 to="/live-sessions"
                 state={{ liveSessions }}
@@ -238,7 +255,9 @@ export const DashboardPage = () => {
                 >
                   <div
                     className="h-36 sm:h-40 w-full bg-center bg-cover relative"
-                    style={{ backgroundImage: `url('${s.thumbnailUrl || "/assets/placeholder.jpg"}')` }}
+                    style={{
+                      backgroundImage: `url('${s.thumbnailUrl || "/assets/placeholder.jpg"}')`,
+                    }}
                     aria-label={s.title}
                   >
                     {s.isLive && (
@@ -248,7 +267,9 @@ export const DashboardPage = () => {
                     )}
                   </div>
                   <div className="p-3 sm:p-4">
-                    <h4 className="text-xs sm:text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition">{s.title}</h4>
+                    <h4 className="text-xs sm:text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition">
+                      {s.title}
+                    </h4>
                     <p className="mt-1 text-xs opacity-70">Live Session</p>
                     {!s.isLive && (
                       <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20">
@@ -260,7 +281,11 @@ export const DashboardPage = () => {
                         to={`/session/${s.id}`}
                         className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 transition"
                       >
-                        {s.isLive ? "Join now" : "Set reminder"}
+                        {s.isLive
+                          ? "Join now"
+                          : !s.isLive && new Date() > new Date(s.endTime)
+                            ? "View recording"
+                            : "Join now"}
                       </Link>
                       <Link
                         to={`/session/${s.id}`}
@@ -278,7 +303,9 @@ export const DashboardPage = () => {
           {/* Explore Courses */}
           <div className="mt-8 sm:mt-12">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base sm:text-lg font-semibold">Explore Courses</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Explore Courses
+              </h3>
               <Link
                 to="/courses"
                 state={{ courses }}
@@ -296,9 +323,7 @@ export const DashboardPage = () => {
                   state={{ courses }}
                   className="block group h-full"
                 >
-                  <article
-                    className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 overflow-hidden transition h-full flex flex-col"
-                  >
+                  <article className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 overflow-hidden transition h-full flex flex-col">
                     <div
                       className="h-36 sm:h-40 w-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300"
                       style={{ backgroundImage: `url('${c.thumbnail}')` }}
@@ -306,13 +331,19 @@ export const DashboardPage = () => {
                     />
                     <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                       <div>
-                        <h4 className="text-xs sm:text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition">{c.title}</h4>
-                        <p className="mt-1 text-xs opacity-70 italic">{c.level}</p>
+                        <h4 className="text-xs sm:text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition">
+                          {c.title}
+                        </h4>
+                        <p className="mt-1 text-xs opacity-70 italic">
+                          {c.level}
+                        </p>
                       </div>
 
                       <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-3">
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest group-hover:text-white transition">View Details →</span>
-                        {enrolled.some(ec => ec.id == c.id) && (
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest group-hover:text-white transition">
+                          View Details →
+                        </span>
+                        {enrolled.some((ec) => ec.id == c.id) && (
                           <span className="rounded-full px-2 py-0.5 text-[9px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-tighter">
                             Enrolled
                           </span>

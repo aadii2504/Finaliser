@@ -68,7 +68,7 @@ public class AnalyticsService : IAnalyticsService
                     CourseId = e.CourseId,
                     CourseTitle = e.Course?.Title ?? "Unknown",
                     Grade = e.Grade,
-                    Score = e.Score,
+                    Score = e.Score.HasValue ? (float?)Math.Round(e.Score.Value) : null,
                     Status = e.Status,
                     Compliance = e.Compliance,
                     Attendance = e.Attendance

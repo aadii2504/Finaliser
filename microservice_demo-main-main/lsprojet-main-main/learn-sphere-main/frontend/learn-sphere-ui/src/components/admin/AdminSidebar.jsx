@@ -24,8 +24,8 @@ export default function AdminSidebar() {
   const [open, setOpen] = React.useState(false); // mobile drawer
   const [theme, setTheme] = React.useState(
     localStorage.getItem("theme") ||
-    document.documentElement.getAttribute("data-theme") ||
-    "dark",
+      document.documentElement.getAttribute("data-theme") ||
+      "dark",
   );
   const navigate = useNavigate();
 
@@ -63,8 +63,7 @@ export default function AdminSidebar() {
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500" />
-          <span className="font-bold">Admin</span>
+          {/* Admin branding removed out per feedback */}
         </div>
         <button
           type="button"
@@ -163,8 +162,9 @@ export default function AdminSidebar() {
 
       {/* Mobile drawer content (already full height via h-screen) */}
       <div
-        className={`md:hidden fixed top-0 left-0 z-50 h-screen w-64 transform transition-transform ${open ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`md:hidden fixed top-0 left-0 z-50 h-screen w-64 transform transition-transform ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
         role="dialog"
         aria-modal="true"
         aria-label="Admin menu"
@@ -173,8 +173,7 @@ export default function AdminSidebar() {
           {/* Drawer header */}
           <div className="mb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500" />
-              <span className="font-bold">Admin</span>
+              {/* Branding removed */}
             </div>
             <button
               type="button"

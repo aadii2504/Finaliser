@@ -41,6 +41,7 @@ export default function Sidebar({ enrolledCount = 0 }) {
       "M6 2h8a2 2 0 012 2v16l-4-2-4 2V4a2 2 0 012-2zM8 6h6v2H8zM8 10h8v2H8z",
     community:
       "M12 12a5 5 0 100-10 5 5 0 000 10zM2 20c0-3.3 4.5-5 10-5s10 1.7 10 5v1H2v-1z",
+    live: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v2a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h8a2 2 0 012 2v2z",
     chevronRight: "M8 5v14l11-7L8 5z",
   };
 
@@ -194,6 +195,14 @@ export default function Sidebar({ enrolledCount = 0 }) {
                 <NavLink to="/community" className={navClass}>
                   <Icon path={ICONS.community} />
                   <Label>Community Help</Label>
+                </NavLink>
+              </li>
+
+              {/* Live Sessions */}
+              <li>
+                <NavLink to="/live-sessions" className={navClass}>
+                  <Icon path={ICONS.live} />
+                  <Label>Live Sessions</Label>
                 </NavLink>
               </li>
             </ul>
