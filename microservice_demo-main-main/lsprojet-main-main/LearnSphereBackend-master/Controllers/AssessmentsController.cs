@@ -334,8 +334,11 @@ public class AssessmentsController : ControllerBase
             if (enrollment.Score == null || score > enrollment.Score)
             {
                 enrollment.Score = score;
-                enrollment.Grade = score >= 90 ? "A" : score >= 80 ? "B" : score >= 70 ? "C" : "F";
+                enrollment.Grade = score >= 90 ? "A" : score >= 80 ? "B" : "C";
             }
+            
+            // Set attendance date when completed
+            enrollment.Attendance = DateTime.UtcNow.ToString("yyyy-MM-dd");
             
             if (passed)
             {

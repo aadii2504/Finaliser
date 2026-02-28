@@ -183,6 +183,8 @@ export default function Analytics() {
       // Format course data for CSV
       const csvData = filteredCourseData.map((course) => ({
         ...course,
+        passed: course.type === "Live Session" ? "NA" : course.passed,
+        failed: course.type === "Live Session" ? "NA" : course.failed,
         createdAt: course.createdAt
           ? new Date(course.createdAt).toLocaleDateString()
           : "N/A",
@@ -478,14 +480,26 @@ export default function Analytics() {
                           {course.enrolled}
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-green-600/20 text-green-400">
-                            {course.passed}
-                          </span>
+                          {course.type === "Live Session" ? (
+                            <span className="text-[var(--text)]/40 font-semibold">
+                              NA
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-green-600/20 text-green-400">
+                              {course.passed}
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-red-600/20 text-red-400">
-                            {course.failed}
-                          </span>
+                          {course.type === "Live Session" ? (
+                            <span className="text-[var(--text)]/40 font-semibold">
+                              NA
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-red-600/20 text-red-400">
+                              {course.failed}
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-sm text-[var(--text)]/80">
                           {course.createdAt ? (
