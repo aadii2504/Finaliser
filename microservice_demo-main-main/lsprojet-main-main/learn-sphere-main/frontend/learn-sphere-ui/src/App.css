@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Theme tokens via CSS variables (no tailwind.config needed) */
+:root {
+  --bg: #f8fafc;            /* light background */
+  --text: #0f172a;          /* light text */
+  --card: rgba(255,255,255,0.75);
+  --border: rgba(17, 24, 39, 0.12);
+}
+
+[data-theme="dark"] {
+  /* Dark radial gradient similar to 100xDevs */
+  --bg: radial-gradient(1200px 600px at 25% -10%, #0b1b3a 0%, #0d1221 40%, #080c17 100%);
+  --text: #e7e9ee;
+  --card: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.10);
+}
+
+/* Shell wrapper so theme applies everywhere */
+.app-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Auto‑sliding carousel marquee */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee {
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* Optional: hide scrollbars on the carousel in some browsers */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
