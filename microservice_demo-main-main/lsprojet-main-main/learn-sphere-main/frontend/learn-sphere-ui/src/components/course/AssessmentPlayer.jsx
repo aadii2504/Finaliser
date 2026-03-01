@@ -158,15 +158,17 @@ export default function AssessmentPlayer({ courseId, onClose }) {
     const isMaxAttempts = eligibility?.reason === "Maximum attempts reached.";
     return (
       <div className="flex flex-col items-center py-12 text-center max-w-lg mx-auto">
-        <div className="w-24 h-24 rounded-3xl bg-white/5 flex items-center justify-center text-4xl mb-6 shadow-inner ring-1 ring-white/10">
+        <div className="w-24 h-24 rounded-3xl bg-[var(--card)] flex items-center justify-center text-4xl mb-6 shadow-inner ring-1 ring-[var(--border)]">
           <FaLock
-            className={isMaxAttempts ? "text-rose-500" : "text-white/20"}
+            className={
+              isMaxAttempts ? "text-rose-500" : "text-[var(--text)]/20"
+            }
           />
         </div>
-        <h2 className="text-3xl font-black mb-3 text-white">
+        <h2 className="text-3xl font-black mb-3 text-[var(--text)]">
           Assessment Locked
         </h2>
-        <p className="text-white/40 mb-10 leading-relaxed px-6">
+        <p className="text-[var(--text)]/40 mb-10 leading-relaxed px-6">
           {eligibility?.reason ||
             "Please complete all course requirements to unlock the final assessment."}
         </p>
@@ -194,7 +196,7 @@ export default function AssessmentPlayer({ courseId, onClose }) {
           {myAttempts.length > 0 && <HistoryTable attempts={myAttempts} />}
           <button
             onClick={onClose}
-            className="w-full py-4 rounded-xl border border-white/10 hover:bg-white/5 font-bold transition-all text-white/60 hover:text-white"
+            className="w-full py-4 rounded-xl border border-[var(--border)] hover:bg-[var(--text)]/5 font-bold transition-all text-[var(--text)]/60 hover:text-[var(--text)]"
           >
             Back to Course
           </button>
@@ -208,30 +210,30 @@ export default function AssessmentPlayer({ courseId, onClose }) {
       <div className="flex flex-col py-8 max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <div className="text-6xl mb-6">🎓</div>
-          <h2 className="text-4xl font-black mb-3 text-white tracking-tight">
+          <h2 className="text-4xl font-black mb-3 text-[var(--text)] tracking-tight">
             Final Assessment
           </h2>
-          <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs">
+          <p className="text-emerald-500 font-bold uppercase tracking-widest text-xs">
             You are qualified for this certification
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-10">
-          <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
-            <p className="text-white/30 text-[10px] uppercase font-black mb-2">
+          <div className="bg-[var(--card)] border border-[var(--border)] p-6 rounded-2xl">
+            <p className="text-[var(--text)]/30 text-[10px] uppercase font-black mb-2">
               Time Limit
             </p>
-            <p className="text-xl font-bold flex items-center gap-2 text-white">
-              <FaRegClock className="text-indigo-400" />{" "}
+            <p className="text-xl font-bold flex items-center gap-2 text-[var(--text)]">
+              <FaRegClock className="text-indigo-500" />{" "}
               {eligibility?.timeLimitMinutes} min
             </p>
           </div>
-          <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
-            <p className="text-white/30 text-[10px] uppercase font-black mb-2">
+          <div className="bg-[var(--card)] border border-[var(--border)] p-6 rounded-2xl">
+            <p className="text-[var(--text)]/30 text-[10px] uppercase font-black mb-2">
               Attempts used
             </p>
-            <p className="text-xl font-bold flex items-center gap-2 text-white">
-              <FaRedo className="text-indigo-400 text-sm" />{" "}
+            <p className="text-xl font-bold flex items-center gap-2 text-[var(--text)]">
+              <FaRedo className="text-indigo-500 text-sm" />{" "}
               {eligibility?.attemptsUsed} of {eligibility?.maxAttempts}
             </p>
           </div>
@@ -252,7 +254,7 @@ export default function AssessmentPlayer({ courseId, onClose }) {
           </button>
           <button
             onClick={onClose}
-            className="w-full py-4 text-white/40 font-bold hover:text-white transition-colors"
+            className="w-full py-4 text-[var(--text)]/50 font-bold hover:text-[var(--text)] transition-colors"
           >
             Cancel
           </button>
@@ -282,15 +284,15 @@ export default function AssessmentPlayer({ courseId, onClose }) {
     return (
       <div className="flex flex-col h-full min-h-[600px] animate-in fade-in duration-500">
         {/* Fixed Top Status */}
-        <div className="flex items-center justify-between mb-10 pb-6 border-b border-white/5">
+        <div className="flex items-center justify-between mb-10 pb-6 border-b border-[var(--border)]">
           <div className="flex items-center gap-4">
             <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></div>
-            <h3 className="font-black text-sm uppercase tracking-widest text-white/60">
+            <h3 className="font-black text-sm uppercase tracking-widest text-[var(--text)]/60">
               Final Assessment
             </h3>
           </div>
           <div
-            className={`px-4 py-2 bg-white/5 rounded-full border border-white/10 flex items-center gap-3 ${timerColor} transition-colors`}
+            className={`px-4 py-2 bg-[var(--card)] rounded-full border border-[var(--border)] flex items-center gap-3 ${timerColor} transition-colors`}
           >
             <FaRegClock className="text-xs" />
             <span className="font-mono text-xl font-black">
@@ -302,16 +304,16 @@ export default function AssessmentPlayer({ courseId, onClose }) {
         {/* Question Info */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-indigo-400 font-bold text-sm tracking-widest uppercase">
+            <span className="text-indigo-500 font-bold text-sm tracking-widest uppercase">
               Question {currentIdx + 1}:
             </span>
             {isMulti && (
-              <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 uppercase font-black border border-indigo-500/20">
+              <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-500 uppercase font-black border border-indigo-500/20">
                 Multiple Choice
               </span>
             )}
           </div>
-          <h2 className="text-2xl font-bold leading-tight text-white/90">
+          <h2 className="text-2xl font-bold leading-tight text-[var(--text)]/90">
             {q.text}
           </h2>
         </div>
@@ -330,13 +332,13 @@ export default function AssessmentPlayer({ courseId, onClose }) {
                 className={`w-full flex items-center gap-4 p-5 rounded-xl border text-left transition-all duration-200 group ${
                   isSelected
                     ? "border-indigo-500 bg-indigo-500/10 ring-1 ring-indigo-500"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                    : "border-[var(--border)] bg-[var(--card)] hover:bg-[var(--text)]/5"
                 }`}
               >
                 <div
                   className={`
                                     w-6 h-6 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-all
-                                    ${isSelected ? "border-indigo-500 bg-indigo-500" : "border-white/20 group-hover:border-white/40"}
+                                    ${isSelected ? "border-indigo-500 bg-indigo-500" : "border-[var(--border)] group-hover:border-[var(--text)]/40"}
                                     ${!isMulti ? "rounded-full" : "rounded"}
                                 `}
                 >
@@ -349,17 +351,17 @@ export default function AssessmentPlayer({ courseId, onClose }) {
         </div>
 
         {/* Footer Controls */}
-        <div className="mt-auto pt-8 border-t border-white/5 flex items-center justify-between">
+        <div className="mt-auto pt-8 border-t border-[var(--border)] flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentIdx(Math.max(0, currentIdx - 1))}
                 disabled={currentIdx === 0}
-                className="p-3 rounded-full hover:bg-white/5 disabled:opacity-0 transition-opacity"
+                className="p-3 rounded-full hover:bg-[var(--card)] disabled:opacity-0 transition-opacity"
               >
                 <FaChevronLeft />
               </button>
-              <span className="text-xs font-black text-white/30 uppercase tracking-widest">
+              <span className="text-xs font-black text-[var(--text)]/30 uppercase tracking-widest">
                 {currentIdx + 1} / {session.questions.length}
               </span>
               <button
@@ -377,14 +379,14 @@ export default function AssessmentPlayer({ courseId, onClose }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="hidden md:block text-[10px] text-white/30 uppercase font-black">
+            <span className="hidden md:block text-[10px] text-[var(--text)]/30 uppercase font-black">
               {Object.keys(answers).length} of {session.questions.length}{" "}
               Answered
             </span>
             <button
               onClick={() => handleSubmit()}
               disabled={submitting}
-              className="px-10 py-4 rounded-xl bg-white text-black hover:bg-white/90 font-black text-sm tracking-wide transition-all shadow-xl disabled:opacity-50"
+              className="px-10 py-4 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500 font-black text-sm tracking-wide transition-all shadow-xl disabled:opacity-50"
             >
               {submitting ? "Submitting..." : "Submit Assessment"}
             </button>

@@ -271,44 +271,28 @@ export const DashboardPage = () => {
                       {s.title}
                     </h4>
                     <p className="mt-1 text-xs opacity-70">Live Session</p>
-                    {!s.isLive && new Date() < new Date(s.startTime) && (
-                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                    {!s.isLive && (
+                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20">
                         Upcoming
                       </span>
                     )}
-                    {!s.isLive && new Date() > new Date(s.endTime) && (
-                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-zinc-500/20 text-zinc-300 border border-zinc-500/30">
-                        Ended
-                      </span>
-                    )}
-                    <div className="mt-4 flex items-center gap-2">
-                      {new Date() > new Date(s.endTime) ? (
-                        <Link
-                          to={`/session/${s.id}`}
-                          className="flex-1 block text-center rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold text-white bg-zinc-700 hover:bg-zinc-600 border border-white/10 transition"
-                        >
-                          View Recording
-                        </Link>
-                      ) : (
-                        <>
-                          <Link
-                            to={`/session/${s.id}`}
-                            className={`flex-1 text-center rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-bold text-white transition ${
-                              s.isLive
-                                ? "bg-gradient-to-tr from-red-600 to-rose-500 hover:opacity-90 animate-pulse"
-                                : "bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90"
-                            }`}
-                          >
-                            Join now
-                          </Link>
-                          <Link
-                            to={`/session/${s.id}`}
-                            className="rounded-lg px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
-                          >
-                            Details
-                          </Link>
-                        </>
-                      )}
+                    <div className="mt-3 flex items-center gap-2">
+                      <Link
+                        to={`/session/${s.id}`}
+                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 transition"
+                      >
+                        {s.isLive
+                          ? "Join now"
+                          : !s.isLive && new Date() > new Date(s.endTime)
+                            ? "View recording"
+                            : "Join now"}
+                      </Link>
+                      <Link
+                        to={`/session/${s.id}`}
+                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
+                      >
+                        Details
+                      </Link>
                     </div>
                   </div>
                 </article>

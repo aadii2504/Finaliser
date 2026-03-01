@@ -56,8 +56,6 @@ public class AnalyticsService : IAnalyticsService
             .Include(a => a.Student)
             .ToListAsync(ct);
 
-        var allLiveSessions = await _db.LiveSessions.ToListAsync(ct);
-
         var allStudentIds = await _db.Students.Select(s => s.Id).ToListAsync(ct);
 
         var studentsMap = await _db.Students
@@ -81,22 +79,18 @@ public class AnalyticsService : IAnalyticsService
                 Attendance = e.Attendance
             }).ToList();
 
-            foreach (var ls in allLiveSessions)
+            foreach (var la in studentAttendances)
             {
-                var attendance = studentAttendances.FirstOrDefault(a => a.LiveSessionId == ls.Id);
-                if (attendance != null)
+                details.Add(new StudentCourseDetailDto
                 {
-                    details.Add(new StudentCourseDetailDto
-                    {
-                        CourseId = ls.Id + 1000000,
-                        CourseTitle = ls.Title,
-                        Grade = "NA",
-                        Score = null,
-                        Status = "Enrolled",
-                        Compliance = "NA",
-                        Attendance = $"Yes ({attendance.JoinedAt:yyyy-MM-dd})"
-                    });
-                }
+                    CourseId = la.LiveSessionId + 1000000,
+                    CourseTitle = la.LiveSession?.Title ?? "Unknown Live Session",
+                    Grade = "NA",
+                    Score = null,
+                    Status = "Enrolled",
+                    Compliance = "NA",
+                    Attendance = la.JoinedAt.ToString("yyyy-MM-dd")
+                });
             }
 
             return new StudentPerformanceDto
