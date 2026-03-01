@@ -158,7 +158,9 @@ export default function Sidebar({ enrolledCount = 0 }) {
                     <ul className="space-y-1">
                       <li>
                         <NavLink to="/my-courses" className={navClass}>
-                          <span className="text-[0.95rem]">My Courses</span>
+                          <span className="text-[0.95rem]">
+                            Completed Courses
+                          </span>
                         </NavLink>
                       </li>
                       <li>
@@ -173,27 +175,11 @@ export default function Sidebar({ enrolledCount = 0 }) {
                 )}
               </li>
 
-              {/* Quizzes */}
+              {/* Help Center */}
               <li>
-                <NavLink to="/quizzes" className={navClass}>
-                  <Icon path={ICONS.quizzes} />
-                  <Label>Quizzes</Label>
-                </NavLink>
-              </li>
-
-              {/* Assignments */}
-              <li>
-                <NavLink to="/assignments" className={navClass}>
-                  <Icon path={ICONS.assignments} />
-                  <Label>Assignments</Label>
-                </NavLink>
-              </li>
-
-              {/* Community Help */}
-              <li>
-                <NavLink to="/community" className={navClass}>
+                <NavLink to="/help" className={navClass}>
                   <Icon path={ICONS.community} />
-                  <Label>Community Help</Label>
+                  <Label>Help Center</Label>
                 </NavLink>
               </li>
             </ul>

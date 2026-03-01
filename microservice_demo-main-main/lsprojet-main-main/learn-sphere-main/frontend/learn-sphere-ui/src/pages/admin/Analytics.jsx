@@ -70,6 +70,7 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [summaryStats, setSummaryStats] = useState({
     totalCourses: 0,
+    totalSessions: 0,
     totalEnrolled: 0,
     totalPassed: 0,
     totalFailed: 0,
@@ -220,11 +221,16 @@ export default function Analytics() {
         </div>
 
         {/* Summary Stats Boxes */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <StatBox
             label="Total Courses"
             value={summaryStats.totalCourses}
             subtitle="Published courses"
+          />
+          <StatBox
+            label="Total Sessions"
+            value={summaryStats.totalSessions || 0}
+            subtitle="Live sessions hosted"
           />
           <StatBox
             label="Total Enrolled"

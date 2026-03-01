@@ -309,14 +309,6 @@ export const DashboardPage = () => {
                             ? "Join now"
                             : "Join Session"}
                       </button>
-                      {!s.isEnded && (
-                        <Link
-                          to={`/session/${s.id}`}
-                          className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
-                        >
-                          Details
-                        </Link>
-                      )}
                     </div>
                   </div>
                 </article>

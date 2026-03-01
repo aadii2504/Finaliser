@@ -18,6 +18,7 @@ public class AnalyticsService : IAnalyticsService
     {
         var totalCourses = await _db.Courses.CountAsync(ct);
         var totalStudents = await _db.Students.CountAsync(ct);
+        var totalSessions = await _db.LiveSessions.CountAsync(ct);
 
         // "Total Enrolled" - distinct students who have at least one enrollment
         var totalEnrolled = await _db.Enrollments
@@ -37,6 +38,7 @@ public class AnalyticsService : IAnalyticsService
         return new AnalyticsSummaryDto
         {
             TotalCourses = totalCourses,
+            TotalSessions = totalSessions,
             TotalEnrolled = totalEnrolled,
             TotalPassed = totalPassed,
             TotalFailed = totalFailed,

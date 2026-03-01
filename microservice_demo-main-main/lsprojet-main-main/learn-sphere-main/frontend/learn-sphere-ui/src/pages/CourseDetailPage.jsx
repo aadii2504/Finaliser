@@ -175,6 +175,15 @@ const CourseDetailPage = () => {
                     You have full access
                   </p>
                 </div>
+              ) : enrolled.some(
+                  (e) => e.id === Number(course.id) && e.status === "Completed",
+                ) ? (
+                <button
+                  disabled
+                  className="w-full px-4 py-2.5 sm:py-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg font-semibold text-sm sm:text-base cursor-not-allowed"
+                >
+                  Course Completed
+                </button>
               ) : (
                 <button
                   onClick={handleEnroll}

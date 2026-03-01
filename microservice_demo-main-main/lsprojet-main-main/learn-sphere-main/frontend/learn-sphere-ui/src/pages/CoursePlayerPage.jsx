@@ -165,7 +165,10 @@ const CoursePlayerPage = () => {
   const renderContent = () => {
     if (activeQuiz) {
       return (
-        <div className="max-w-4xl mx-auto py-12 px-6 h-full">
+        <div
+          className="max-w-4xl mx-auto py-12 px-6 h-full"
+          style={{ zoom: 0.85 }}
+        >
           <QuizPlayer
             quiz={activeQuiz}
             onClose={() => setActiveQuiz(null)}
@@ -190,7 +193,10 @@ const CoursePlayerPage = () => {
 
     if (activeAssessment) {
       return (
-        <div className="max-w-4xl mx-auto py-12 px-6 h-full">
+        <div
+          className="max-w-5xl mx-auto py-12 px-6 h-full"
+          style={{ zoom: 0.85 }}
+        >
           <AssessmentPlayer
             courseId={course.id}
             onClose={() => {
