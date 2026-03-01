@@ -59,6 +59,7 @@ public class AnalyticsService : IAnalyticsService
         var allStudentIds = await _db.Students.Select(s => s.Id).ToListAsync(ct);
 
         var studentsMap = await _db.Students
+            .Where(s => allStudentIds.Contains(s.Id))
             .ToDictionaryAsync(s => s.Id, ct);
 
         var groupedData = allStudentIds.Select(studentId =>

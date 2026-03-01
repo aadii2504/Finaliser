@@ -28,22 +28,22 @@ export default function SupportPage() {
         <Sidebar />
       </aside>
 
-      <main className="flex-1 w-full p-4 md:p-8 overflow-y-auto bg-black text-white">
-        <div className="max-w-xl mx-auto mt-8">
-          <div className="mb-8 text-center md:text-left">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-2xl mb-4 shadow-[0_0_30px_rgba(99,102,241,0.2)] ring-1 ring-indigo-500/30 mx-auto md:mx-0">
+      <main className="flex-1 w-full p-6 md:p-12 overflow-y-auto bg-black text-white flex flex-col justify-center items-center">
+        <div className="w-full max-w-lg">
+          <div className="mb-8 text-center">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-2xl mb-4 shadow-[0_0_30px_rgba(99,102,241,0.2)] ring-1 ring-indigo-500/30 mx-auto">
               💬
             </div>
-            <h1 className="text-3xl font-black mb-2 tracking-tight">
+            <h1 className="text-4xl font-black mb-2 tracking-tight">
               Help & Support
             </h1>
-            <p className="text-white/50 text-base">
+            <p className="text-white/50 text-lg">
               Having trouble? Reach out to our support team and we'll help you
               resolve your issue as soon as possible.
             </p>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 md:p-8 rounded-2xl shadow-2xl">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-bold text-white/70 mb-2 uppercase tracking-wider">

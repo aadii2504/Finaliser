@@ -63,8 +63,7 @@ export default function AdminSidebar() {
       role="navigation"
     >
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-3"></div>
+      <div className="mb-4 flex items-center justify-end">
         <button
           type="button"
           onClick={toggleTheme}
@@ -171,8 +170,7 @@ export default function AdminSidebar() {
       >
         <div className="h-full bg-[var(--card)] border-r border-[var(--border)] text-[var(--text)] p-4">
           {/* Drawer header */}
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3"></div>
+          <div className="mb-6 flex items-center justify-end">
             <button
               type="button"
               className="px-3 py-1 rounded-md hover:bg-white/10"

@@ -178,7 +178,6 @@ export default function Analytics() {
         { key: "enrolled", label: "Total Enrolled" },
         { key: "passed", label: "Passed" },
         { key: "failed", label: "Failed" },
-        { key: "attendance", label: "Attendance" },
         { key: "createdAt", label: "Course Creation Date" },
       ];
       // Format course data for CSV
@@ -186,8 +185,7 @@ export default function Analytics() {
         ...course,
         passed: course.type === "Live Session" ? "NA" : course.passed,
         failed: course.type === "Live Session" ? "NA" : course.failed,
-        enrolled: course.type === "Live Session" ? "NA" : course.enrolled,
-        attendance: course.attendanceStats?.attended || 0,
+        enrolled: course.enrolled,
         createdAt: course.createdAt
           ? new Date(course.createdAt).toLocaleDateString()
           : "N/A",
@@ -453,9 +451,6 @@ export default function Analytics() {
                       Failed
                     </th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text)]">
-                      Attendance
-                    </th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text)]">
                       Course Creation Date
                     </th>
                   </tr>
@@ -483,13 +478,7 @@ export default function Analytics() {
                           {course.type}
                         </td>
                         <td className="px-4 py-3 text-sm text-[var(--text)]">
-                          {course.type === "Live Session" ? (
-                            <span className="text-[var(--text)]/40 font-semibold">
-                              NA
-                            </span>
-                          ) : (
-                            course.enrolled
-                          )}
+                          {course.enrolled}
                         </td>
                         <td className="px-4 py-3 text-sm">
                           {course.type === "Live Session" ? (
@@ -513,13 +502,12 @@ export default function Analytics() {
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-sm text-[var(--text)] font-semibold text-indigo-400">
-                          {course.attendanceStats?.attended || 0}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-[var(--text)]/60">
-                          {course.createdAt
-                            ? new Date(course.createdAt).toLocaleDateString()
-                            : "N/A"}
+                        <td className="px-4 py-3 text-sm text-[var(--text)]/80">
+                          {course.createdAt ? (
+                            new Date(course.createdAt).toLocaleDateString()
+                          ) : (
+                            <span className="text-[var(--text)]/40">NA</span>
+                          )}
                         </td>
                       </tr>
                     ))

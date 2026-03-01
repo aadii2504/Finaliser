@@ -217,9 +217,9 @@ const LiveSessionsPage = () => {
 
                 <div className="flex items-center gap-2 mt-2">
                   <button
-                    disabled={session.isUpcoming}
+                    disabled={session.isUpcoming || session.isPassed}
                     onClick={async (e) => {
-                      if (session.isUpcoming) return;
+                      if (session.isUpcoming || session.isPassed) return;
                       // Only mark attendance if they join during LIVE phase
                       if (session.isLive && !session.isPassed) {
                         try {
@@ -233,15 +233,13 @@ const LiveSessionsPage = () => {
                     className={`flex-1 text-center rounded-xl px-3 py-3 text-[11px] font-black uppercase tracking-wider transition-all ${
                       session.isLive
                         ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
-                        : session.isUpcoming
-                          ? "bg-blue-600/40 text-white/50 cursor-not-allowed border border-blue-500/20"
-                          : "bg-white/5 text-white/60 hover:bg-white/10"
+                        : "bg-white/5 text-white/40 cursor-not-allowed border border-white/10"
                     }`}
                   >
                     {session.isUpcoming
-                      ? "Starts Soon"
+                      ? "Upcoming"
                       : session.isPassed
-                        ? "View Recording"
+                        ? "Ended"
                         : "Join Now"}
                   </button>
                 </div>
