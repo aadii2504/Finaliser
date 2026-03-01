@@ -84,18 +84,19 @@ public class AnalyticsService : IAnalyticsService
             foreach (var ls in allLiveSessions)
             {
                 var attendance = studentAttendances.FirstOrDefault(a => a.LiveSessionId == ls.Id);
-                bool attended = attendance != null;
-
-                details.Add(new StudentCourseDetailDto
+                if (attendance != null)
                 {
-                    CourseId = ls.Id + 1000000,
-                    CourseTitle = ls.Title,
-                    Grade = "NA",
-                    Score = null,
-                    Status = attended ? "Enrolled" : "Not Enrolled",
-                    Compliance = "NA",
-                    Attendance = attended ? $"Yes ({attendance!.JoinedAt:yyyy-MM-dd})" : "No (-)"
-                });
+                    details.Add(new StudentCourseDetailDto
+                    {
+                        CourseId = ls.Id + 1000000,
+                        CourseTitle = ls.Title,
+                        Grade = "NA",
+                        Score = null,
+                        Status = "Enrolled",
+                        Compliance = "NA",
+                        Attendance = $"Yes ({attendance.JoinedAt:yyyy-MM-dd})"
+                    });
+                }
             }
 
             return new StudentPerformanceDto
