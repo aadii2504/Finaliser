@@ -12,14 +12,12 @@ import {
   HiOutlineVideoCamera,
 } from "react-icons/hi";
 
-// NavLink class: sleek and consistent with the dark theme and Sidebar.jsx
+// NavLink class: active gets bg, hover otherwise + focus-visible ring for accessibility
 const itemClass = ({ isActive }) =>
   [
-    "flex items-center gap-3 px-3 py-2 rounded-md text-[15px] font-medium transition-colors border border-transparent",
+    "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
     "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400",
-    isActive
-      ? "bg-white/10 text-[var(--text)]"
-      : "text-[var(--text)] hover:bg-white/5 text-[var(--text)]/80 hover:text-[var(--text)]",
+    isActive ? "bg-white/10" : "hover:bg-white/5",
   ].join(" ");
 
 export default function AdminSidebar() {
@@ -63,7 +61,11 @@ export default function AdminSidebar() {
       role="navigation"
     >
       {/* Header */}
-      <div className="mb-4 flex items-center justify-end">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500" />
+          <span className="font-bold">Admin</span>
+        </div>
         <button
           type="button"
           onClick={toggleTheme}
@@ -170,7 +172,11 @@ export default function AdminSidebar() {
       >
         <div className="h-full bg-[var(--card)] border-r border-[var(--border)] text-[var(--text)] p-4">
           {/* Drawer header */}
-          <div className="mb-6 flex items-center justify-end">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500" />
+              <span className="font-bold">Admin</span>
+            </div>
             <button
               type="button"
               className="px-3 py-1 rounded-md hover:bg-white/10"

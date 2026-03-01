@@ -54,15 +54,10 @@ public class LiveSessionsController : ControllerBase
         var session = await _db.LiveSessions.FindAsync(id);
         if (session == null) return NotFound("Live session not found.");
 
-        // Ensure current time is within the session window
         var now = DateTime.UtcNow;
-        if (now < session.StartTime)
+        if (now < session.StartTime || now > session.EndTime)
         {
-            return Ok(new { joined = false, message = "Session has not started yet." });
-        }
-        if (now > session.EndTime)
-        {
-            return Ok(new { joined = false, message = "Session has passed. Video recording is available but attendance is not recorded." });
+            return Ok(new { joined = false, message = "Session is not currently live." });
         }
 
         var existing = await _db.LiveSessionAttendances

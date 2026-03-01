@@ -2,7 +2,11 @@ import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { enrollCourse, subscribe, getSnapshot } from "../components/EnrollmentStore";
+import {
+  enrollCourse,
+  subscribe,
+  getSnapshot,
+} from "../components/EnrollmentStore";
 import { courseApi } from "../api/courseApi";
 import { CurriculumAccordion } from "../components/course/CurriculumAccordion";
 import { SafeMarkdown } from "../components/common/SafeMarkdown";
@@ -12,7 +16,7 @@ const CourseDetailPage = () => {
   const navigate = useNavigate();
   const enrolled = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   const [course, setCourse] = useState(null);
-  const isEnrolled = course ? enrolled.some(c => c.id == course.id) : false;
+  const isEnrolled = course ? enrolled.some((c) => c.id == course.id) : false;
 
   const [structure, setStructure] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +29,7 @@ const CourseDetailPage = () => {
         // Fetch both course details and its structure (chapters/lessons)
         const [courseData, structureData] = await Promise.all([
           courseApi.getBySlug(slug),
-          courseApi.getStructureBySlug(slug)
+          courseApi.getStructureBySlug(slug),
         ]);
         setCourse(courseData);
         setStructure(structureData);
@@ -54,9 +58,16 @@ const CourseDetailPage = () => {
   const handleEnroll = () => {
     enrollCourse({
       id: course.id,
+      slug: course.slug,
       title: course.title,
       level: course.level || "N/A",
-      lessons: course.lessons || structure?.chapters?.reduce((acc, ch) => acc + (ch.lessons?.length || 0), 0) || 0,
+      lessons:
+        course.lessons ||
+        structure?.chapters?.reduce(
+          (acc, ch) => acc + (ch.lessons?.length || 0),
+          0,
+        ) ||
+        0,
       thumbnail: course.thumbnail || "/assets/placeholder.jpg",
     });
 
@@ -84,17 +95,23 @@ const CourseDetailPage = () => {
           </button>
 
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3">{course.title}</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3">
+              {course.title}
+            </h1>
             <p className="text-xs sm:text-sm opacity-70">{course.level}</p>
           </div>
 
           <div className="text-sm sm:text-base opacity-80 leading-relaxed">
-            <SafeMarkdown text={course.description || "No description available."} />
+            <SafeMarkdown
+              text={course.description || "No description available."}
+            />
           </div>
 
           {course.learningPoints && course.learningPoints.length > 0 && (
             <div>
-              <h2 className="text-base sm:text-lg font-semibold mb-3">What you'll learn</h2>
+              <h2 className="text-base sm:text-lg font-semibold mb-3">
+                What you'll learn
+              </h2>
               <ul className="space-y-2">
                 {course.learningPoints.map((point, index) => (
                   <li key={index} className="text-sm opacity-80 flex gap-2">
@@ -108,7 +125,9 @@ const CourseDetailPage = () => {
 
           {course.requirements && course.requirements.length > 0 && (
             <div>
-              <h2 className="text-base sm:text-lg font-semibold mb-3">Requirements</h2>
+              <h2 className="text-base sm:text-lg font-semibold mb-3">
+                Requirements
+              </h2>
               <ul className="space-y-2">
                 {course.requirements.map((req, index) => (
                   <li key={index} className="text-sm opacity-80 flex gap-2">
@@ -121,7 +140,9 @@ const CourseDetailPage = () => {
           )}
 
           <div>
-            <h2 className="text-base sm:text-lg font-semibold mb-4">Course Curriculum</h2>
+            <h2 className="text-base sm:text-lg font-semibold mb-4">
+              Course Curriculum
+            </h2>
             <CurriculumAccordion chapters={structure?.chapters || []} />
           </div>
         </div>
@@ -137,7 +158,9 @@ const CourseDetailPage = () => {
             <div className="p-4 sm:p-6 space-y-4">
               <div>
                 <p className="text-xs opacity-60 mb-1">Price</p>
-                <p className="text-lg sm:text-xl font-bold text-emerald-400">Free</p>
+                <p className="text-lg sm:text-xl font-bold text-emerald-400">
+                  Free
+                </p>
               </div>
 
               {isEnrolled ? (
@@ -148,7 +171,9 @@ const CourseDetailPage = () => {
                   >
                     Go to Course
                   </button>
-                  <p className="text-xs text-center opacity-60">You have full access</p>
+                  <p className="text-xs text-center opacity-60">
+                    You have full access
+                  </p>
                 </div>
               ) : (
                 <button

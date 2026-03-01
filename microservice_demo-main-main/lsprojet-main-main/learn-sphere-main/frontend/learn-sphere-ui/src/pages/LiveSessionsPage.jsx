@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { liveSessionApi } from "../api/courseApi";
-import Sidebar from "../components/Dashboard/Sidebar";
 
 const LiveSessionsPage = () => {
   const location = useLocation();
@@ -9,29 +8,6 @@ const LiveSessionsPage = () => {
     location.state?.liveSessions || [],
   );
   const [loading, setLoading] = useState(!liveSessions.length);
-  const sidebarShellRef = useRef(null);
-  const [sidebarWidth, setSidebarWidth] = useState(0);
-
-  useLayoutEffect(() => {
-    const shell = sidebarShellRef.current;
-    if (!shell) return;
-    const target = shell.firstElementChild || shell;
-
-    const measure = () => {
-      const rect = target.getBoundingClientRect();
-      setSidebarWidth(Math.max(0, Math.round(rect.width)));
-    };
-
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(target);
-    window.addEventListener("resize", measure);
-
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
 
   const normalizeDate = (isoString) => {
     if (!isoString) return new Date();
@@ -64,13 +40,12 @@ const LiveSessionsPage = () => {
           const data = await liveSessionApi.getAll();
           const now = new Date();
           const mapped = (data || []).map((s) => {
-            const start = normalizeDate(s.startTime);
             const end = normalizeDate(s.endTime);
             return {
               ...s,
-              isUpcoming: now < start,
-              isLive: now >= start && now <= end,
+              isLive: now >= normalizeDate(s.startTime) && now <= end,
               isPassed: now > end,
+              isUpcoming: now < normalizeDate(s.startTime),
             };
           });
           setLiveSessions(mapped);
@@ -86,169 +61,113 @@ const LiveSessionsPage = () => {
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-[calc(100vh-80px)]"
-        style={{ ["--sidebar-current-width"]: `${sidebarWidth}px` }}
-      >
-        <aside
-          className="flex-shrink-0"
-          style={{
-            width: "var(--sidebar-current-width)",
-            transition: "width 50ms ease",
-          }}
-        >
-          <div ref={sidebarShellRef}>
-            <Sidebar />
-          </div>
-        </aside>
-        <main className="flex-1 overflow-y-auto w-full p-12 text-center text-white/40">
-          Loading sessions...
-        </main>
-      </div>
+      <div className="p-12 text-center text-white/40">Loading sessions...</div>
     );
   }
 
   if (!liveSessions.length) {
     return (
-      <div
-        className="flex min-h-[calc(100vh-80px)]"
-        style={{ ["--sidebar-current-width"]: `${sidebarWidth}px` }}
-      >
-        <aside
-          className="flex-shrink-0"
-          style={{
-            width: "var(--sidebar-current-width)",
-            transition: "width 50ms ease",
-          }}
-        >
-          <div ref={sidebarShellRef}>
-            <Sidebar />
-          </div>
-        </aside>
-        <main className="flex-1 overflow-y-auto w-full mx-auto max-w-7xl px-4 py-12 text-center text-white">
-          <h1 className="text-2xl font-bold mb-4 text-white/40">
-            No live sessions scheduled
-          </h1>
-          <Link to="/dashboard" className="text-indigo-400 hover:underline">
-            Back to Dashboard
-          </Link>
-        </main>
+      <div className="mx-auto max-w-7xl px-4 py-12 text-center text-white">
+        <h1 className="text-2xl font-bold mb-4 text-white/40">
+          No live sessions scheduled
+        </h1>
+        <Link to="/dashboard" className="text-indigo-400 hover:underline">
+          Back to Dashboard
+        </Link>
       </div>
     );
   }
 
   return (
-    <div
-      className="flex min-h-[calc(100vh-80px)]"
-      style={{ ["--sidebar-current-width"]: `${sidebarWidth}px` }}
-    >
-      <aside
-        className="flex-shrink-0"
-        style={{
-          width: "var(--sidebar-current-width)",
-          transition: "width 50ms ease",
-        }}
-      >
-        <div ref={sidebarShellRef}>
-          <Sidebar />
-        </div>
-      </aside>
+    <div className="mx-auto max-w-7xl px-4 py-12 text-white">
+      <h1 className="text-3xl font-black mb-1">Live Events</h1>
+      <p className="text-white/40 mb-10">All scheduled and active sessions</p>
 
-      <main className="flex-1 overflow-y-auto w-full mx-auto max-w-7xl px-4 py-12 text-white">
-        <h1 className="text-3xl font-black mb-1">Live Events</h1>
-        <p className="text-white/40 mb-10">All scheduled and active sessions</p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {liveSessions.map((session) => (
-            <article
-              key={session.id}
-              className="rounded-2xl border border-white/10 overflow-hidden group hover:border-indigo-500/50 transition-all bg-white/5"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {liveSessions.map((session) => (
+          <article
+            key={session.id}
+            className="rounded-2xl border border-white/10 overflow-hidden group hover:border-indigo-500/50 transition-all bg-white/5"
+          >
+            <div
+              className="h-48 w-full bg-center bg-cover relative"
+              style={{
+                backgroundImage: `url('${session.thumbnailUrl || "/assets/placeholder.jpg"}')`,
+              }}
+              aria-label={session.title}
             >
-              <div
-                className="h-48 w-full bg-center bg-cover relative"
-                style={{
-                  backgroundImage: `url('${session.thumbnailUrl || "/assets/placeholder.jpg"}')`,
-                }}
-                aria-label={session.title}
-              >
-                {session.isLive && (
-                  <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-red-600 animate-pulse">
-                    LIVE
-                  </span>
-                )}
-                {session.isUpcoming && (
-                  <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-blue-600 shadow-md">
-                    UPCOMING
-                  </span>
-                )}
-                {session.isPassed && (
-                  <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-gray-600 opacity-80">
-                    ENDED
-                  </span>
-                )}
-              </div>
-              <div className="p-5">
-                <h4 className="text-base font-bold line-clamp-2 mb-1">
-                  {session.title}
-                </h4>
-                <p className="text-xs text-white/40 mb-4">
-                  Live Learning Session
+              {session.isLive ? (
+                <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-red-600 animate-pulse">
+                  LIVE
+                </span>
+              ) : session.isUpcoming ? (
+                <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-indigo-500">
+                  UPCOMING
+                </span>
+              ) : (
+                <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-slate-600">
+                  ENDED
+                </span>
+              )}
+            </div>
+            <div className="p-5">
+              <h4 className="text-base font-bold line-clamp-2 mb-1">
+                {session.title}
+              </h4>
+              <p className="text-xs text-white/40 mb-4">
+                Live Learning Session
+              </p>
+
+              <div className="space-y-2 mb-6">
+                <p className="text-[10px] font-black uppercase text-white/20">
+                  Schedule
                 </p>
-
-                <div className="space-y-2 mb-6">
-                  <p className="text-[10px] font-black uppercase text-white/20">
-                    Schedule
-                  </p>
-                  <p className="text-xs font-medium">
-                    {formatDateTime(session.startTime)}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                    <span className="text-[10px] text-white/60">
-                      {Math.round(
-                        (new Date(session.endTime) -
-                          new Date(session.startTime)) /
-                          60000,
-                      )}{" "}
-                      mins
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 mt-2">
-                  <button
-                    disabled={session.isUpcoming}
-                    onClick={async (e) => {
-                      if (session.isUpcoming) return;
-                      // Only mark attendance if they join during LIVE phase
-                      if (session.isLive && !session.isPassed) {
-                        try {
-                          await liveSessionApi.join(session.id);
-                        } catch (err) {
-                          console.error("Could not register attendance", err);
-                        }
-                      }
-                      // If it's passed or live, go to session
-                      window.location.href = `/session/${session.id}`;
-                    }}
-                    className={`flex-1 text-center rounded-xl px-3 py-3 text-[11px] font-black uppercase tracking-wider transition-all ${
-                      session.isLive || session.isPassed
-                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
-                        : "bg-white/5 text-white/40 cursor-not-allowed border border-white/10"
-                    }`}
-                  >
-                    {session.isUpcoming
-                      ? "Upcoming"
-                      : session.isPassed
-                        ? "View Recording"
-                        : "Join Now"}
-                  </button>
+                <p className="text-xs font-medium">
+                  {formatDateTime(session.startTime)}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                  <span className="text-[10px] text-white/60">
+                    {Math.round(
+                      (new Date(session.endTime) -
+                        new Date(session.startTime)) /
+                        60000,
+                    )}{" "}
+                    mins
+                  </span>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-      </main>
+
+              <div className="flex items-center gap-2 mt-2">
+                <button
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (!session.isPassed) {
+                      try {
+                        await liveSessionApi.join(session.id);
+                      } catch (err) {
+                        console.error("Could not register attendance", err);
+                      }
+                    }
+                    window.location.href = `/session/${session.id}`;
+                  }}
+                  className={`flex-1 text-center rounded-xl px-3 py-3 text-[11px] font-black uppercase tracking-wider transition-all ${
+                    !session.isPassed
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
+                      : "bg-white/5 text-white/60 hover:bg-white/10"
+                  }`}
+                >
+                  {session.isPassed
+                    ? "View Recording"
+                    : session.isLive
+                      ? "Join Session"
+                      : "Join Now"}
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 };

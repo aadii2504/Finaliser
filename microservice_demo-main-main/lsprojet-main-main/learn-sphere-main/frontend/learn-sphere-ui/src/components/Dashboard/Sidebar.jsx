@@ -13,13 +13,12 @@ export default function Sidebar({ enrolledCount = 0 }) {
   const [expanded, setExpanded] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(true);
 
-  // Styles (theme-friendly)
+  // Styles (theme-frienwq
+  // dly)
   const linkBase =
-    "group flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-medium transition-all duration-300 border border-transparent";
-  const linkActive =
-    "bg-indigo-600/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border-indigo-500/20 shadow-sm";
-  const linkInactive =
-    "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white";
+    "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors";
+  const linkActive = "bg-white/10 text-[var(--text)]";
+  const linkInactive = "text-[var(--text)] hover:bg-white/5";
   const navClass = ({ isActive }) =>
     `${linkBase} ${isActive ? linkActive : linkInactive}`;
 
@@ -42,7 +41,6 @@ export default function Sidebar({ enrolledCount = 0 }) {
       "M6 2h8a2 2 0 012 2v16l-4-2-4 2V4a2 2 0 012-2zM8 6h6v2H8zM8 10h8v2H8z",
     community:
       "M12 12a5 5 0 100-10 5 5 0 000 10zM2 20c0-3.3 4.5-5 10-5s10 1.7 10 5v1H2v-1z",
-    live: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v2a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h8a2 2 0 012 2v2z",
     chevronRight: "M8 5v14l11-7L8 5z",
   };
 
@@ -175,11 +173,27 @@ export default function Sidebar({ enrolledCount = 0 }) {
                 )}
               </li>
 
-              {/* Help & Support */}
+              {/* Quizzes */}
               <li>
-                <NavLink to="/support" className={navClass}>
+                <NavLink to="/quizzes" className={navClass}>
+                  <Icon path={ICONS.quizzes} />
+                  <Label>Quizzes</Label>
+                </NavLink>
+              </li>
+
+              {/* Assignments */}
+              <li>
+                <NavLink to="/assignments" className={navClass}>
+                  <Icon path={ICONS.assignments} />
+                  <Label>Assignments</Label>
+                </NavLink>
+              </li>
+
+              {/* Community Help */}
+              <li>
+                <NavLink to="/community" className={navClass}>
                   <Icon path={ICONS.community} />
-                  <Label>Help / Support</Label>
+                  <Label>Community Help</Label>
                 </NavLink>
               </li>
             </ul>
