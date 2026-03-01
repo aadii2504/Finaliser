@@ -156,7 +156,7 @@ const CoursePlayerPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950">
+      <div className="flex items-center justify-center min-h-screen bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
     );
@@ -239,11 +239,11 @@ const CoursePlayerPage = () => {
         );
       }
       return (
-        <div className="flex flex-col items-center justify-center aspect-video w-full bg-black/60 rounded-xl text-white/40 p-12 text-center border border-white/5">
+        <div className="flex flex-col items-center justify-center aspect-video w-full bg-slate-800/80 rounded-xl text-white/60 p-12 text-center border border-white/5">
           <div className="w-20 h-20 mb-4 rounded-full bg-white/5 flex items-center justify-center">
             <span className="text-4xl">📚</span>
           </div>
-          <h3 className="text-xl font-bold text-white/80">
+          <h3 className="text-xl font-bold text-white/90">
             No content available
           </h3>
         </div>
@@ -418,9 +418,9 @@ const CoursePlayerPage = () => {
 
   return (
     <>
-      <div className="flex flex-col h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+      <div className="flex flex-col h-screen bg-slate-900 text-slate-100 overflow-hidden font-sans">
         {/* Premium Top Navigation */}
-        <nav className="h-16 bg-slate-900/95 backdrop-blur-md flex items-center px-6 border-b border-indigo-500/10 z-20 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+        <nav className="h-16 bg-slate-800/95 backdrop-blur-md flex items-center px-6 border-b border-indigo-500/10 z-20 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
           <button
             onClick={() => navigate("/dashboard")}
             className="font-black text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mr-8 hover:scale-105 transition-transform"
@@ -435,15 +435,15 @@ const CoursePlayerPage = () => {
 
         <div className="flex-1 flex overflow-hidden">
           {/* Main Content (Left) */}
-          <div className="flex-1 flex flex-col bg-slate-950/70 overflow-y-auto relative">
+          <div className="flex-1 flex flex-col bg-slate-900/50 overflow-y-auto relative">
             <div className="flex-1 p-6">{renderContent()}</div>
 
             {/* Overview panel will be rendered inside the lesson section below */}
 
             {/* Premium Info Bar */}
-            <div className="p-8 bg-gradient-to-b from-slate-900 to-slate-950 border-t border-indigo-500/10 relative overflow-hidden">
+            <div className="p-8 bg-gradient-to-b from-slate-800 to-slate-900 border-t border-indigo-500/10 relative overflow-hidden">
               <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-              <h2 className="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
+              <h2 className="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/80">
                 {activeQuiz
                   ? activeQuiz.title
                   : activeAssessment
@@ -533,7 +533,7 @@ const CoursePlayerPage = () => {
                   </div>
                 </div>
               )}
-              <div className="text-white/40 leading-relaxed max-w-4xl">
+              <div className="text-white/70 leading-relaxed max-w-4xl">
                 <SafeMarkdown
                   text={
                     activeQuiz
@@ -551,11 +551,11 @@ const CoursePlayerPage = () => {
 
           {/* Sidebar (Right) */}
           <div
-            className={`bg-slate-900/95 backdrop-blur-xl border-l border-indigo-500/10 transition-all duration-500 overflow-hidden flex flex-col shrink-0 shadow-[-10px_0_30px_rgba(0,0,0,0.3)] ${
+            className={`bg-slate-800/95 backdrop-blur-xl border-l border-indigo-500/10 transition-all duration-500 overflow-hidden flex flex-col shrink-0 shadow-[-10px_0_30px_rgba(0,0,0,0.3)] ${
               sidebarOpen ? "w-[380px]" : "w-0"
             }`}
           >
-            <div className="p-5 border-b border-indigo-500/10 flex flex-col gap-3 bg-gradient-to-br from-slate-800 to-slate-900 sticky top-0 z-10 whitespace-nowrap">
+            <div className="p-5 border-b border-indigo-500/10 flex flex-col gap-3 bg-gradient-to-br from-slate-700 to-slate-800 sticky top-0 z-10 whitespace-nowrap">
               <div className="flex items-center justify-between">
                 <h2 className="font-black text-sm tracking-widest uppercase text-indigo-300/80">
                   Curriculum

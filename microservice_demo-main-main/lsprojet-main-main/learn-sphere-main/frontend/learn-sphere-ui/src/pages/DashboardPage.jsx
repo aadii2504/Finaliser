@@ -77,12 +77,15 @@ export const DashboardPage = () => {
 
         // Transform backend dates and set isLive based on current time
         const now = new Date();
-        const mappedSessions = (liveData || []).map((s) => ({
-          ...s,
-          isLive:
-            now >= normalizeDate(s.startTime) &&
-            now <= normalizeDate(s.endTime),
-        }));
+        const mappedSessions = (liveData || []).map((s) => {
+          const startTime = normalizeDate(s.startTime);
+          const endTime = normalizeDate(s.endTime);
+          return {
+            ...s,
+            isLive: now >= startTime && now <= endTime,
+            isPassed: now > endTime,
+          };
+        });
         setLiveSessions(mappedSessions);
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
@@ -273,7 +276,7 @@ export const DashboardPage = () => {
                     <p className="mt-1 text-xs opacity-70">Live Session</p>
                     {!s.isLive && (
                       <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20">
-                        Upcoming
+                        {s.isPassed ? "Ended" : "Upcoming"}
                       </span>
                     )}
                     <div className="mt-3 flex items-center gap-2">
@@ -281,18 +284,16 @@ export const DashboardPage = () => {
                         to={`/session/${s.id}`}
                         className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 transition"
                       >
-                        {s.isLive
-                          ? "Join now"
-                          : !s.isLive && new Date() > new Date(s.endTime)
-                            ? "View recording"
-                            : "Join now"}
+                        {s.isPassed ? "View recording" : "Join now"}
                       </Link>
-                      <Link
-                        to={`/session/${s.id}`}
-                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
-                      >
-                        Details
-                      </Link>
+                      {!s.isPassed && (
+                        <Link
+                          to={`/session/${s.id}`}
+                          className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
+                        >
+                          Details
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </article>

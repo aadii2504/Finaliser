@@ -53,7 +53,7 @@ export default function EnrolledCourses() {
 
                 <div className="mt-3 flex items-center gap-2">
                   <button
-                    onClick={() => navigate(`/course/${c.slug}`)}
+                    onClick={() => navigate(`/course/${c.slug}/learn`)}
                     className="rounded-lg px-3 py-2 text-sm font-semibold text-white
                                bg-gradient-to-tr from-indigo-600 to-blue-500 shadow hover:shadow-md transition"
                   >
