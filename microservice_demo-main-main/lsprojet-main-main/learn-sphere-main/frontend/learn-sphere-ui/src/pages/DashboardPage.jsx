@@ -271,27 +271,31 @@ export const DashboardPage = () => {
                       {s.title}
                     </h4>
                     <p className="mt-1 text-xs opacity-70">Live Session</p>
-                    {!s.isLive && (
-                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20">
+                    {!s.isLive && new Date() > new Date(s.endTime) ? (
+                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-gray-600/20 text-gray-300 border border-white/20">
+                        Ended
+                      </span>
+                    ) : !s.isLive ? (
+                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20 mt-2">
                         Upcoming
                       </span>
-                    )}
+                    ) : null}
                     <div className="mt-3 flex items-center gap-2">
                       <Link
                         to={`/session/${s.id}`}
-                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 transition"
+                        className={`rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white transition ${
+                          s.isLive
+                            ? "bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90"
+                            : !s.isLive && new Date() > new Date(s.endTime)
+                              ? "bg-gradient-to-tr from-gray-600 to-gray-500 hover:opacity-90"
+                              : "bg-white/10 border border-white/20 pointer-events-none opacity-50"
+                        }`}
                       >
                         {s.isLive
                           ? "Join now"
                           : !s.isLive && new Date() > new Date(s.endTime)
                             ? "View recording"
-                            : "Join now"}
-                      </Link>
-                      <Link
-                        to={`/session/${s.id}`}
-                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
-                      >
-                        Details
+                            : "Starts soon"}
                       </Link>
                     </div>
                   </div>

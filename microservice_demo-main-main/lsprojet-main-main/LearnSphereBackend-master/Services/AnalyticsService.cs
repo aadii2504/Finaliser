@@ -56,12 +56,9 @@ public class AnalyticsService : IAnalyticsService
             .Include(a => a.Student)
             .ToListAsync(ct);
 
-        var allStudentIds = enrollments.Select(e => e.StudentId)
-            .Union(liveAttendances.Select(la => la.StudentId))
-            .Distinct().ToList();
+        var allStudentIds = await _db.Students.Select(s => s.Id).ToListAsync(ct);
 
         var studentsMap = await _db.Students
-            .Where(s => allStudentIds.Contains(s.Id))
             .ToDictionaryAsync(s => s.Id, ct);
 
         var groupedData = allStudentIds.Select(studentId =>

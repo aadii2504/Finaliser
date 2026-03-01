@@ -64,12 +64,7 @@ export default function AdminSidebar() {
     >
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-sm shrink-0" />
-          <span className="text-sm font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
-            LearnSphere
-          </span>
-        </div>
+        <div className="flex items-center gap-3"></div>
         <button
           type="button"
           onClick={toggleTheme}
@@ -177,12 +172,7 @@ export default function AdminSidebar() {
         <div className="h-full bg-[var(--card)] border-r border-[var(--border)] text-[var(--text)] p-4">
           {/* Drawer header */}
           <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-sm shrink-0" />
-              <span className="text-sm font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
-                LearnSphere
-              </span>
-            </div>
+            <div className="flex items-center gap-3"></div>
             <button
               type="button"
               className="px-3 py-1 rounded-md hover:bg-white/10"

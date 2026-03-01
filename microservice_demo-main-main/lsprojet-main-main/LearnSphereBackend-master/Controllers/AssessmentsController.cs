@@ -334,7 +334,7 @@ public class AssessmentsController : ControllerBase
             if (enrollment.Score == null || score > enrollment.Score)
             {
                 enrollment.Score = score;
-                enrollment.Grade = score >= 90 ? "A" : score >= 80 ? "B" : "C";
+                enrollment.Grade = score >= 80 ? "A" : score >= 60 ? "B" : "C";
             }
             
             // Set attendance date when completed
