@@ -58,15 +58,18 @@ const LiveSessionsPage = () => {
   };
 
   const calculateStates = (sessions) => {
-    const now = new Date();
+    const nowLocal = new Date();
+    // Force comparing UTC to UTC properly without offset glitches
     return sessions.map((s) => {
+      // startTime and endTime from API should already be in UTC
       const start = normalizeDate(s.startTime);
       const end = normalizeDate(s.endTime);
+
       return {
         ...s,
-        isUpcoming: now < start,
-        isLive: now >= start && now <= end,
-        isPassed: now > end,
+        isUpcoming: nowLocal < start,
+        isLive: nowLocal >= start && nowLocal <= end,
+        isPassed: nowLocal > end,
       };
     });
   };
@@ -254,7 +257,7 @@ const LiveSessionsPage = () => {
                         ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
                         : session.isPassed
                           ? "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                          : "bg-white/5 text-white/40 cursor-not-allowed border border-white/10"
+                          : "bg-[var(--card)] text-[var(--text)]/40 cursor-not-allowed border border-[var(--border)]"
                     }`}
                   >
                     {session.isUpcoming

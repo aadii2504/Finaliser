@@ -144,11 +144,11 @@ public class AnalyticsService : IAnalyticsService
         foreach (var ls in liveSessions)
         {
             int attended = attendances.Count(a => a.LiveSessionId == ls.Id);
-            int enrolled = attended; // Only count actual attendees as 'enrolled' for live sessions
+            int enrolled = attended; // Total enrolled == Total joined for live session
 
             result.Add(new CoursePerformanceDto
             {
-                Id = ls.Id + 1000000, // offset Id to avoid UI key collisions
+                Id = ls.Id + 1000000, 
                 Title = ls.Title,
                 Type = "Live Session",
                 Categories = new List<string>(),
