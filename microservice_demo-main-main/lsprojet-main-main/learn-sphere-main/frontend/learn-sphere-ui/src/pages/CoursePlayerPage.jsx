@@ -271,18 +271,30 @@ const CoursePlayerPage = () => {
     const type = (content.contentType || "document").toLowerCase();
 
     switch (type) {
-      case "video":
+      case "video": {
+        const videoKey = `ls_vid_${course?.id}_${currentLesson?.id}_${selectedContentIndex}`;
         return (
-          <div className="relative group aspect-video w-full bg-black shadow-2xl">
+          <div className="relative group aspect-video w-full bg-black border-b border-white/5">
             <video
               src={fileUrl}
               controls
-              className="w-full h-full"
+              controlsList="nodownload"
+              className="w-full h-full object-contain focus:outline-none"
               poster={course?.thumbnail}
+              onLoadedMetadata={(e) => {
+                const saved = localStorage.getItem(videoKey);
+                if (saved && e.target.duration > parseFloat(saved)) {
+                  e.target.currentTime = parseFloat(saved);
+                }
+              }}
+              onTimeUpdate={(e) => {
+                localStorage.setItem(videoKey, e.target.currentTime);
+              }}
             />
             {renderNavArrows()}
           </div>
         );
+      }
       case "audio":
         return (
           <div className="relative group flex flex-col items-center justify-center min-h-[60vh] p-12 bg-[#1e293b]/20 text-center space-y-6">
@@ -420,16 +432,21 @@ const CoursePlayerPage = () => {
     <>
       <div className="flex flex-col h-screen bg-black text-slate-100 overflow-hidden font-sans">
         {/* Premium Top Navigation */}
-        <nav className="h-16 bg-[#0f172a]/80 backdrop-blur-md flex items-center px-6 border-b border-white/10 z-20 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <nav className="h-16 bg-[#09090b] flex items-center px-6 sm:px-10 border-b border-white/5 z-20 shrink-0">
           <button
             onClick={() => navigate("/dashboard")}
-            className="font-black text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mr-8 hover:scale-105 transition-transform"
+            className="flex items-center gap-3 group mr-8"
           >
-            LearnSphere
+            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-black text-lg group-hover:scale-105 transition-transform">
+              L
+            </div>
+            <span className="font-bold text-white tracking-tight hidden sm:block">
+              LearnSphere
+            </span>
           </button>
-          <div className="h-6 w-[1px] bg-white/10 mr-8 hidden md:block"></div>
-          <h1 className="text-lg font-bold truncate opacity-90">
-            {course?.title}
+          <div className="h-4 w-[1px] bg-white/10 mr-8 hidden md:block"></div>
+          <h1 className="text-sm font-semibold tracking-wide truncate text-white/50">
+            Course // <span className="text-white ml-2">{course?.title}</span>
           </h1>
         </nav>
 
@@ -440,10 +457,9 @@ const CoursePlayerPage = () => {
 
             {/* Overview panel will be rendered inside the lesson section below */}
 
-            {/* Premium Info Bar */}
-            <div className="p-8 bg-gradient-to-b from-[#1e293b] to-[#0f172a] border-t border-white/10 relative overflow-hidden">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-              <h2 className="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
+            {/* Minimal Info Bar */}
+            <div className="p-8 lg:px-12 bg-[#000000] relative overflow-hidden">
+              <h2 className="text-2xl font-bold mb-1 text-white tracking-tight">
                 {activeQuiz
                   ? activeQuiz.title
                   : activeAssessment
@@ -452,9 +468,9 @@ const CoursePlayerPage = () => {
               </h2>
               {/* Overview panel for all lessons */}
               {currentLesson && (
-                <div className="my-6 relative z-10">
-                  <div className="max-w-2xl">
-                    <div className="bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 shadow-2xl hover:border-indigo-500/30 transition-colors">
+                <div className="my-8 relative z-10">
+                  <div className="max-w-3xl">
+                    <div className="bg-[#09090b] p-8 rounded-3xl border border-white/5">
                       <div className="flex items-start justify-between gap-6">
                         <div className="flex-1">
                           <h3 className="text-lg font-bold mb-2 text-indigo-200">
@@ -533,31 +549,29 @@ const CoursePlayerPage = () => {
                   </div>
                 </div>
               )}
-              <div className="text-white/40 leading-relaxed max-w-4xl">
-                <SafeMarkdown
-                  text={
-                    activeQuiz
-                      ? activeQuiz.description
-                      : activeAssessment
-                        ? "Test your knowledge across the entire course."
-                        : currentLesson?.description ||
-                          course?.description ||
-                          "No description available."
-                  }
-                />
-              </div>
+              <SafeMarkdown
+                text={
+                  activeQuiz
+                    ? activeQuiz.description
+                    : activeAssessment
+                      ? "Test your knowledge across the entire course."
+                      : currentLesson?.description ||
+                        course?.description ||
+                        "No description available."
+                }
+              />
             </div>
           </div>
 
           {/* Sidebar (Right) */}
           <div
-            className={`bg-[#0f172a]/95 backdrop-blur-xl border-l border-white/10 transition-all duration-500 overflow-hidden flex flex-col shrink-0 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] ${
-              sidebarOpen ? "w-[380px]" : "w-0"
+            className={`bg-[#09090b] border-l border-white/5 transition-all duration-500 overflow-hidden flex flex-col shrink-0 ${
+              sidebarOpen ? "w-[360px]" : "w-0"
             }`}
           >
-            <div className="p-5 border-b border-white/10 flex flex-col gap-3 bg-gradient-to-br from-[#1e293b] to-[#0f172a] sticky top-0 z-10 whitespace-nowrap">
+            <div className="p-6 border-b border-white/5 flex flex-col gap-4 bg-[#09090b] sticky top-0 z-10 whitespace-nowrap">
               <div className="flex items-center justify-between">
-                <h2 className="font-black text-sm tracking-widest uppercase text-indigo-300/70">
+                <h2 className="font-bold text-[10px] tracking-widest uppercase text-white/40">
                   Curriculum
                 </h2>
                 <button
@@ -569,19 +583,14 @@ const CoursePlayerPage = () => {
               </div>
 
               {/* Global Progress Tracker */}
-              <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)]">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30">
-                    <FaTrophy className="text-indigo-500/50" />
-                    Your Completion
-                  </div>
-                  <span className="text-xs font-black text-white/90">
-                    {progressPercentage}%
-                  </span>
+              <div className="p-4 rounded-2xl bg-black border border-white/5">
+                <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-widest text-white/50">
+                  <span>Your Progress</span>
+                  <span className="text-white">{progressPercentage}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-600 to-indigo-400 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+                    className="h-full bg-white transition-all duration-700 ease-out"
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>

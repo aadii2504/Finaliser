@@ -54,10 +54,11 @@ public class LiveSessionsController : ControllerBase
         var session = await _db.LiveSessions.FindAsync(id);
         if (session == null) return NotFound("Live session not found.");
 
-        // Only track attendance if we are BEFORE the session has ended.
-        if (DateTime.UtcNow > session.EndTime)
+        // Only track attendance if within the strict live session window.
+        var now = DateTime.UtcNow;
+        if (now < session.StartTime || now > session.EndTime)
         {
-            return Ok(new { joined = false, message = "Session has passed. Video recording is available but attendance is not recorded." });
+            return Ok(new { joined = false, message = "Attendance is only recorded during the live session window. You can watch the recording if the session has ended." });
         }
 
         var existing = await _db.LiveSessionAttendances
