@@ -26,6 +26,7 @@ import CoursePlayerPage from "./pages/CoursePlayerPage";
 import LiveSessionsPage from "./pages/LiveSessionsPage";
 import LiveSessionPlayer from "./pages/LiveSessionPlayer";
 import LiveSessionManager from "./pages/admin/LiveSessionManager";
+import SupportPage from "./pages/student/SupportPage";
 
 export default function App() {
   const [courses] = useState([
@@ -136,6 +137,14 @@ export default function App() {
               <ProtectedAdminRoute>
                 <UsersAdmin />
               </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <ProtectedRoute>
+                <SupportPage />
+              </ProtectedRoute>
             }
           />
           <Route path="/courses" element={<CoursesPage />} />

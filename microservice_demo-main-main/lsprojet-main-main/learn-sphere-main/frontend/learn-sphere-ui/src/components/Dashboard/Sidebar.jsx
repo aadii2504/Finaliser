@@ -175,11 +175,11 @@ export default function Sidebar({ enrolledCount = 0 }) {
                 )}
               </li>
 
-              {/* Community Help */}
+              {/* Help & Support */}
               <li>
-                <NavLink to="/community" className={navClass}>
+                <NavLink to="/support" className={navClass}>
                   <Icon path={ICONS.community} />
-                  <Label>Community Help</Label>
+                  <Label>Help / Support</Label>
                 </NavLink>
               </li>
             </ul>

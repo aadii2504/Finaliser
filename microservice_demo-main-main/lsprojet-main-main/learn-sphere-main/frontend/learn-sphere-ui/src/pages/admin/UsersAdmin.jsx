@@ -1,4 +1,3 @@
-
 // src/pages/admin/UsersAdmin.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -26,26 +25,29 @@ export default function UsersAdmin() {
         setLoading(true);
         const data = await userApi.getAll();
         // Transform backend data to frontend format
-        const transformed = data.map(user => ({
+        const transformed = data.map((user) => ({
           id: user.id,
           name: user.name,
           email: user.email,
           phone: user.studentProfile?.phone || "",
           role: user.role,
           status: user.status, // Now from backend
-          guardian: user.studentProfile ? {
-            name: user.studentProfile.guardianName || "",
-            phone: user.studentProfile.guardianPhone || ""
-          } : null,
-          createdAt: new Date().toISOString() // Placeholder
+          guardian: user.studentProfile
+            ? {
+                name: user.studentProfile.guardianName || "",
+                phone: user.studentProfile.guardianPhone || "",
+              }
+            : null,
+          createdAt: new Date().toISOString(), // Placeholder
         }));
         // Exclude admin accounts from the management list
-        const nonAdmin = transformed.filter(u => u.role !== "admin");
+        const nonAdmin = transformed.filter((u) => u.role !== "admin");
         setUsers(nonAdmin);
         setError(null);
       } catch (err) {
         console.error("Failed to load users:", err);
-        const message = err.response?.data?.error || err.message || "Failed to load users";
+        const message =
+          err.response?.data?.error || err.message || "Failed to load users";
         setError(message);
         toast.error(message);
       } finally {
@@ -62,10 +64,12 @@ export default function UsersAdmin() {
     try {
       await userApi.updateStatus(userId, newStatus);
       // Update local state
-      setUsers(prev => prev.map(u => 
-        u.id === userId ? { ...u, status: newStatus } : u
-      ));
-      toast.success(`User ${newStatus === "active" ? "activated" : "deactivated"} successfully`);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: newStatus } : u)),
+      );
+      toast.success(
+        `User ${newStatus === "active" ? "activated" : "deactivated"} successfully`,
+      );
     } catch (err) {
       console.error("Failed to update status:", err);
       toast.error("Failed to update user status");
@@ -81,7 +85,7 @@ export default function UsersAdmin() {
       data = data.filter((u) =>
         [u.name, u.email, u.phone, u.role, u.guardian?.name, u.guardian?.phone]
           .filter(Boolean)
-          .some((v) => String(v).toLowerCase().includes(term))
+          .some((v) => String(v).toLowerCase().includes(term)),
       );
     }
     data.sort((a, b) => {
@@ -118,11 +122,21 @@ export default function UsersAdmin() {
           </div> */}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <Stat label="Total Users" value={users.length} />
           <Stat
-            label="Students"
-            value={users.filter((u) => u.role === "student").length}
+            label="Active Students"
+            value={
+              users.filter((u) => u.role === "student" && u.status === "active")
+                .length
+            }
+          />
+          <Stat
+            label="Deactivated Students"
+            value={
+              users.filter((u) => u.role === "student" && u.status !== "active")
+                .length
+            }
           />
         </div>
 
@@ -238,7 +252,11 @@ export default function UsersAdmin() {
                               : "bg-green-600/20 text-green-300 hover:bg-green-600/30"
                           } disabled:opacity-50`}
                         >
-                          {updatingStatus === u.id ? "Updating..." : u.status === "active" ? "Deactivate" : "Activate"}
+                          {updatingStatus === u.id
+                            ? "Updating..."
+                            : u.status === "active"
+                              ? "Deactivate"
+                              : "Activate"}
                         </button>
                       </td>
                     </tr>
@@ -252,6 +270,3 @@ export default function UsersAdmin() {
     </div>
   );
 }
-
-
-

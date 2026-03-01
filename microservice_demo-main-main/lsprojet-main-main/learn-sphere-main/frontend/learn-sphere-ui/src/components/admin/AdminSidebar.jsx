@@ -12,14 +12,14 @@ import {
   HiOutlineVideoCamera,
 } from "react-icons/hi";
 
-// NavLink class: active gets brand background and elegant text colors
+// NavLink class: sleek and consistent with the dark theme and Sidebar.jsx
 const itemClass = ({ isActive }) =>
   [
-    "group flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-medium transition-all duration-300",
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
+    "flex items-center gap-3 px-3 py-2 rounded-md text-[15px] font-medium transition-colors border border-transparent",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400",
     isActive
-      ? "bg-indigo-600/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-500/20 shadow-sm"
-      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 border border-transparent dark:hover:text-white",
+      ? "bg-white/10 text-[var(--text)]"
+      : "text-[var(--text)] hover:bg-white/5 text-[var(--text)]/80 hover:text-[var(--text)]",
   ].join(" ");
 
 export default function AdminSidebar() {
@@ -63,13 +63,11 @@ export default function AdminSidebar() {
       role="navigation"
     >
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white shadow-md shadow-indigo-500/20">
-            A
-          </span>
-          <span className="text-lg font-bold tracking-tight text-gray-800 dark:text-gray-100">
-            Admin
+          <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-sm shrink-0" />
+          <span className="text-sm font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
+            LearnSphere
           </span>
         </div>
         <button
@@ -180,11 +178,9 @@ export default function AdminSidebar() {
           {/* Drawer header */}
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 font-bold text-white shadow-md shadow-indigo-500/20">
-                A
-              </span>
-              <span className="text-lg font-bold tracking-tight text-gray-800 dark:text-gray-100">
-                Admin
+              <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 shadow-sm shrink-0" />
+              <span className="text-sm font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
+                LearnSphere
               </span>
             </div>
             <button

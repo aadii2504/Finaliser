@@ -185,6 +185,7 @@ export default function Analytics() {
         ...course,
         passed: course.type === "Live Session" ? "NA" : course.passed,
         failed: course.type === "Live Session" ? "NA" : course.failed,
+        enrolled: course.type === "Live Session" ? "NA" : course.enrolled,
         createdAt: course.createdAt
           ? new Date(course.createdAt).toLocaleDateString()
           : "N/A",
@@ -477,7 +478,13 @@ export default function Analytics() {
                           {course.type}
                         </td>
                         <td className="px-4 py-3 text-sm text-[var(--text)]">
-                          {course.enrolled}
+                          {course.type === "Live Session" ? (
+                            <span className="text-[var(--text)]/40 font-semibold">
+                              NA
+                            </span>
+                          ) : (
+                            course.enrolled
+                          )}
                         </td>
                         <td className="px-4 py-3 text-sm">
                           {course.type === "Live Session" ? (

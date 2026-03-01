@@ -16,7 +16,7 @@ public class AnalyticsService : IAnalyticsService
 
     public async Task<AnalyticsSummaryDto> GetSummaryStatsAsync(CancellationToken ct = default)
     {
-        var totalCourses = await _db.Courses.CountAsync(ct);
+        var totalCourses = await _db.Courses.CountAsync(ct) + await _db.LiveSessions.CountAsync(ct);
         var totalStudents = await _db.Students.CountAsync(ct);
 
         // "Total Enrolled" - distinct students who have at least one enrollment
@@ -56,56 +56,54 @@ public class AnalyticsService : IAnalyticsService
             .Include(a => a.Student)
             .ToListAsync(ct);
 
-        var liveSessions = await _db.LiveSessions.ToListAsync(ct);
+        var allStudentIds = enrollments.Select(e => e.StudentId)
+            .Union(liveAttendances.Select(la => la.StudentId))
+            .Distinct().ToList();
 
-        var groupedData = enrollments
-            .GroupBy(e => e.StudentId)
-            .Select(g =>
+        var studentsMap = await _db.Students
+            .Where(s => allStudentIds.Contains(s.Id))
+            .ToDictionaryAsync(s => s.Id, ct);
+
+        var groupedData = allStudentIds.Select(studentId =>
+        {
+            var student = studentsMap.GetValueOrDefault(studentId);
+            var studentEnrollments = enrollments.Where(e => e.StudentId == studentId).ToList();
+            var studentAttendances = liveAttendances.Where(la => la.StudentId == studentId).ToList();
+            
+            var details = studentEnrollments.Select(e => new StudentCourseDetailDto
             {
-                var student = g.First().Student;
-                var studentAttendances = liveAttendances.Where(la => la.StudentId == g.Key).ToList();
-                var enrolledCourseIds = g.Select(e => e.CourseId).ToHashSet();
-                
-                var details = g.Select(e => new StudentCourseDetailDto
-                {
-                    CourseId = e.CourseId,
-                    CourseTitle = e.Course?.Title ?? "Unknown",
-                    Grade = e.Grade,
-                    Score = e.Score.HasValue ? (float?)Math.Round(e.Score.Value) : null,
-                    Status = e.Status,
-                    Compliance = e.Compliance,
-                    Attendance = e.Attendance
-                }).ToList();
+                CourseId = e.CourseId,
+                CourseTitle = e.Course?.Title ?? "Unknown",
+                Grade = e.Grade,
+                Score = e.Score.HasValue ? (float?)Math.Round(e.Score.Value) : null,
+                Status = e.Status,
+                Compliance = e.Compliance,
+                Attendance = e.Attendance
+            }).ToList();
 
-                var eligibleLiveSessions = liveSessions.Where(ls => 
-                    !ls.CourseId.HasValue || enrolledCourseIds.Contains(ls.CourseId.Value)).ToList();
-
-                foreach (var ls in eligibleLiveSessions)
+            foreach (var la in studentAttendances)
+            {
+                details.Add(new StudentCourseDetailDto
                 {
-                    var attendance = studentAttendances.FirstOrDefault(a => a.LiveSessionId == ls.Id);
-                    
-                    details.Add(new StudentCourseDetailDto
-                    {
-                        CourseId = ls.Id + 1000000,
-                        CourseTitle = ls.Title ?? "Unknown Live Session",
-                        Grade = "NA",
-                        Score = null,
-                        Status = attendance != null ? "Attended" : "Enrolled",
-                        Compliance = "NA",
-                        Attendance = attendance != null ? attendance.JoinedAt.ToString("yyyy-MM-dd") : "-"
-                    });
-                }
+                    CourseId = la.LiveSessionId + 1000000,
+                    CourseTitle = la.LiveSession?.Title ?? "Unknown Live Session",
+                    Grade = "NA",
+                    Score = null,
+                    Status = "Attended",
+                    Compliance = "NA",
+                    Attendance = la.JoinedAt.ToString("yyyy-MM-dd")
+                });
+            }
 
-                return new StudentPerformanceDto
-                {
-                    StudentId = g.Key,
-                    StudentName = student != null ? student.FullName : "Unknown",
-                    StudentEmail = student != null ? student.Email : "",
-                    CoursesEnrolled = details.Count,
-                    Enrollments = details
-                };
-            })
-            .ToList();
+            return new StudentPerformanceDto
+            {
+                StudentId = studentId,
+                StudentName = student != null ? student.FullName : "Unknown",
+                StudentEmail = student != null ? student.Email : "",
+                CoursesEnrolled = details.Count,
+                Enrollments = details
+            };
+        }).ToList();
 
         return groupedData;
     }
@@ -147,8 +145,8 @@ public class AnalyticsService : IAnalyticsService
 
         foreach (var ls in liveSessions)
         {
-            int enrolled = ls.CourseId.HasValue ? (ls.Course?.Enrollments.Count ?? 0) : totalStudents;
             int attended = attendances.Count(a => a.LiveSessionId == ls.Id);
+            int enrolled = attended; // Only count actual attendees as 'enrolled' for live sessions
 
             result.Add(new CoursePerformanceDto
             {
