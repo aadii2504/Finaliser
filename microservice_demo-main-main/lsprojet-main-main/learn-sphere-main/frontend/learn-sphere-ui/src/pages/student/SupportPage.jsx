@@ -28,7 +28,7 @@ export default function SupportPage() {
         <Sidebar />
       </aside>
 
-      <main className="flex-1 w-full p-6 md:p-12 overflow-y-auto bg-[var(--background)] text-[var(--text)] flex flex-col justify-center items-center">
+      <main className="flex-1 w-full p-6 md:p-12 overflow-y-auto bg-black text-white flex flex-col justify-center items-center">
         <div className="w-full max-w-lg">
           <div className="mb-8 text-center">
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-2xl mb-4 shadow-[0_0_30px_rgba(99,102,241,0.2)] ring-1 ring-indigo-500/30 mx-auto">
@@ -37,23 +37,23 @@ export default function SupportPage() {
             <h1 className="text-4xl font-black mb-2 tracking-tight">
               Help & Support
             </h1>
-            <p className="text-[var(--text)]/60 text-lg">
+            <p className="text-white/50 text-lg">
               Having trouble? Reach out to our support team and we'll help you
               resolve your issue as soon as possible.
             </p>
           </div>
 
-          <div className="bg-[var(--card)] border border-[var(--border)] p-8 rounded-2xl shadow-lg">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-bold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                <label className="block text-sm font-bold text-white/70 mb-2 uppercase tracking-wider">
                   Subject
                 </label>
                 <input
                   type="text"
                   required
                   placeholder="E.g., Cannot access my course materials"
-                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder-[var(--text)]/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                   value={formData.subject}
                   onChange={(e) =>
                     setFormData({ ...formData, subject: e.target.value })
@@ -62,14 +62,14 @@ export default function SupportPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                <label className="block text-sm font-bold text-white/70 mb-2 uppercase tracking-wider">
                   Message
                 </label>
                 <textarea
                   required
                   rows={6}
                   placeholder="Describe your issue in detail..."
-                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text)] placeholder-[var(--text)]/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
@@ -100,10 +100,10 @@ export default function SupportPage() {
           <div className="mt-12 p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-start gap-4">
             <div className="text-blue-400 text-2xl">💡</div>
             <div>
-              <h3 className="font-bold text-blue-400 mb-1">
+              <h3 className="font-bold text-blue-300 mb-1">
                 Check the Community!
               </h3>
-              <p className="text-blue-400/80 text-sm">
+              <p className="text-blue-200/70 text-sm">
                 Before submitting a ticket, your question might already be
                 answered in the Community Help section. Feel free to browse
                 through the discussions.

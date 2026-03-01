@@ -57,53 +57,31 @@ const LiveSessionsPage = () => {
     });
   };
 
-  const calculateStates = (sessions) => {
-    const nowLocal = new Date();
-    // Force comparing UTC to UTC properly without offset glitches
-    return sessions.map((s) => {
-      // startTime and endTime from API should already be in UTC
-      const start = normalizeDate(s.startTime);
-      const end = normalizeDate(s.endTime);
-
-      return {
-        ...s,
-        isUpcoming: nowLocal < start,
-        isLive: nowLocal >= start && nowLocal <= end,
-        isPassed: nowLocal > end,
-      };
-    });
-  };
-
   useEffect(() => {
-    let intervalId;
-    const fetchData = async () => {
-      try {
-        const data = await liveSessionApi.getAll();
-        setLiveSessions(calculateStates(data || []));
-
-        intervalId = setInterval(() => {
-          setLiveSessions((prev) => calculateStates(prev));
-        }, 60000);
-      } catch (err) {
-        console.error("Failed to fetch live sessions", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (!liveSessions.length) {
+      const fetchData = async () => {
+        try {
+          const data = await liveSessionApi.getAll();
+          const now = new Date();
+          const mapped = (data || []).map((s) => {
+            const start = normalizeDate(s.startTime);
+            const end = normalizeDate(s.endTime);
+            return {
+              ...s,
+              isUpcoming: now < start,
+              isLive: now >= start && now <= end,
+              isPassed: now > end,
+            };
+          });
+          setLiveSessions(mapped);
+        } catch (err) {
+          console.error("Failed to fetch live sessions", err);
+        } finally {
+          setLoading(false);
+        }
+      };
       fetchData();
-    } else {
-      setLiveSessions(calculateStates(liveSessions));
-      intervalId = setInterval(() => {
-        setLiveSessions((prev) => calculateStates(prev));
-      }, 60000);
-      setLoading(false);
     }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
   }, []);
 
   if (loading) {
@@ -243,21 +221,20 @@ const LiveSessionsPage = () => {
                     onClick={async (e) => {
                       if (session.isUpcoming) return;
                       // Only mark attendance if they join during LIVE phase
-                      if (session.isLive) {
+                      if (session.isLive && !session.isPassed) {
                         try {
                           await liveSessionApi.join(session.id);
                         } catch (err) {
                           console.error("Could not register attendance", err);
                         }
                       }
+                      // If it's passed or live, go to session
                       window.location.href = `/session/${session.id}`;
                     }}
                     className={`flex-1 text-center rounded-xl px-3 py-3 text-[11px] font-black uppercase tracking-wider transition-all ${
-                      session.isLive
+                      session.isLive || session.isPassed
                         ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
-                        : session.isPassed
-                          ? "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                          : "bg-[var(--card)] text-[var(--text)]/40 cursor-not-allowed border border-[var(--border)]"
+                        : "bg-white/5 text-white/40 cursor-not-allowed border border-white/10"
                     }`}
                   >
                     {session.isUpcoming

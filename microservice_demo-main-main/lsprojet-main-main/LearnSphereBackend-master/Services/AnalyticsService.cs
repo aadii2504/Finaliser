@@ -93,6 +93,15 @@ public class AnalyticsService : IAnalyticsService
                 });
             }
 
+            // Map frontend attendance strings to "-" if null or empty, or "No"
+            foreach (var detail in details)
+            {
+                if (string.IsNullOrWhiteSpace(detail.Attendance) || detail.Attendance.Equals("No", StringComparison.OrdinalIgnoreCase))
+                {
+                    detail.Attendance = "-";
+                }
+            }
+
             return new StudentPerformanceDto
             {
                 StudentId = studentId,
@@ -143,12 +152,13 @@ public class AnalyticsService : IAnalyticsService
 
         foreach (var ls in liveSessions)
         {
-            int attended = attendances.Count(a => a.LiveSessionId == ls.Id);
-            int enrolled = attended; // Total enrolled == Total joined for live session
+            // Only distinct attendees count towards "Total Enrolled" for Live Sessions
+            int enrolled = attendances.Where(a => a.LiveSessionId == ls.Id).Select(a => a.StudentId).Distinct().Count();
+            int attended = enrolled; 
 
             result.Add(new CoursePerformanceDto
             {
-                Id = ls.Id + 1000000, 
+                Id = ls.Id + 1000000, // offset Id to avoid UI key collisions
                 Title = ls.Title,
                 Type = "Live Session",
                 Categories = new List<string>(),

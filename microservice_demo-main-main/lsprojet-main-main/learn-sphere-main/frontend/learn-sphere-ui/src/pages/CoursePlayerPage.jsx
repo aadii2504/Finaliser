@@ -156,8 +156,8 @@ const CoursePlayerPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[var(--background)]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+      <div className="flex items-center justify-center min-h-screen bg-slate-950">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
     );
   }
@@ -213,12 +213,12 @@ const CoursePlayerPage = () => {
           <div className="flex flex-col items-center justify-center p-12 h-full text-center animate-in fade-in zoom-in duration-700 relative overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] -z-10"></div>
             <div className="w-28 h-28 mb-8 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center text-6xl shadow-[0_0_50px_rgba(99,102,241,0.3)] ring-1 ring-indigo-500/30 backdrop-blur-xl">
-              <FaTrophy className="text-indigo-500 animate-bounce" />
+              <FaTrophy className="text-indigo-400 animate-bounce" />
             </div>
-            <h2 className="text-4xl font-black mb-4 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-violet-500">
+            <h2 className="text-4xl font-black mb-4 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-white to-violet-200">
               Mission Accomplished!
             </h2>
-            <p className="text-[var(--text)]/60 max-w-lg mx-auto mb-12 text-lg leading-relaxed font-medium">
+            <p className="text-white/60 max-w-lg mx-auto mb-12 text-lg leading-relaxed font-medium">
               You've conquered every lesson and quiz. The final challenge
               awaits. Prove your mastery and claim your certificate.
             </p>
@@ -239,11 +239,11 @@ const CoursePlayerPage = () => {
         );
       }
       return (
-        <div className="flex flex-col items-center justify-center aspect-video w-full bg-[var(--card)] rounded-xl text-[var(--text)]/40 p-12 text-center border border-[var(--border)]">
-          <div className="w-20 h-20 mb-4 rounded-full bg-[var(--text)]/5 flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center aspect-video w-full bg-black/60 rounded-xl text-white/40 p-12 text-center border border-white/5">
+          <div className="w-20 h-20 mb-4 rounded-full bg-white/5 flex items-center justify-center">
             <span className="text-4xl">📚</span>
           </div>
-          <h3 className="text-xl font-bold text-[var(--text)]/80">
+          <h3 className="text-xl font-bold text-white/80">
             No content available
           </h3>
         </div>
@@ -273,7 +273,7 @@ const CoursePlayerPage = () => {
     switch (type) {
       case "video":
         return (
-          <div className="relative group aspect-video w-full bg-black shadow-2xl">
+          <div className="relative group aspect-video w-full bg-slate-900 shadow-2xl rounded-xl overflow-hidden">
             <video
               src={fileUrl}
               controls
@@ -300,11 +300,11 @@ const CoursePlayerPage = () => {
         );
       case "image":
         return (
-          <div className="relative group flex items-center justify-center min-h-[70vh] bg-black/40">
+          <div className="relative group flex items-center justify-center min-h-[70vh] bg-slate-900/40 rounded-xl overflow-hidden">
             <img
               src={fileUrl}
               alt={content.title}
-              className="max-w-full max-h-[85vh] shadow-2xl"
+              className="max-w-full max-h-[85vh] shadow-2xl rounded-xl"
             />
             {renderNavArrows()}
           </div>
@@ -418,30 +418,32 @@ const CoursePlayerPage = () => {
 
   return (
     <>
-      <div className="flex flex-col h-screen bg-[var(--background)] text-[var(--text)] overflow-hidden font-sans">
+      <div className="flex flex-col h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
         {/* Premium Top Navigation */}
-        <nav className="h-16 bg-[var(--card)]/80 backdrop-blur-md flex items-center px-6 border-b border-[var(--border)] z-20 shrink-0 shadow-sm">
+        <nav className="h-16 bg-slate-900/95 backdrop-blur-md flex items-center px-6 border-b border-indigo-500/10 z-20 shrink-0 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
           <button
             onClick={() => navigate("/dashboard")}
-            className="font-black text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-violet-500 mr-8 hover:scale-105 transition-transform"
+            className="font-black text-2xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mr-8 hover:scale-105 transition-transform"
           >
             LearnSphere
           </button>
-          <div className="h-6 w-[1px] bg-[var(--border)] mr-8 hidden md:block"></div>
-          <h1 className="text-lg font-bold truncate opacity-90 text-[var(--text)]">
+          <div className="h-6 w-[1px] bg-white/10 mr-8 hidden md:block"></div>
+          <h1 className="text-lg font-bold truncate opacity-90">
             {course?.title}
           </h1>
         </nav>
 
         <div className="flex-1 flex overflow-hidden">
           {/* Main Content (Left) */}
-          <div className="flex-1 flex flex-col bg-[var(--background)] overflow-y-auto relative">
-            <div className="flex-1">{renderContent()}</div>
+          <div className="flex-1 flex flex-col bg-slate-950/70 overflow-y-auto relative">
+            <div className="flex-1 p-6">{renderContent()}</div>
+
+            {/* Overview panel will be rendered inside the lesson section below */}
 
             {/* Premium Info Bar */}
-            <div className="p-8 bg-[var(--card)] border-t border-[var(--border)] relative overflow-hidden">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-              <h2 className="text-3xl font-black mb-2 text-[var(--text)]">
+            <div className="p-8 bg-gradient-to-b from-slate-900 to-slate-950 border-t border-indigo-500/10 relative overflow-hidden">
+              <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+              <h2 className="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
                 {activeQuiz
                   ? activeQuiz.title
                   : activeAssessment
@@ -452,27 +454,27 @@ const CoursePlayerPage = () => {
               {currentLesson && (
                 <div className="my-6 relative z-10">
                   <div className="max-w-2xl">
-                    <div className="bg-[var(--background)] p-6 rounded-2xl border border-[var(--border)] shadow-md hover:border-indigo-500/30 transition-colors">
+                    <div className="bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10 shadow-2xl hover:border-indigo-500/30 transition-colors">
                       <div className="flex items-start justify-between gap-6">
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold mb-2 text-indigo-500">
+                          <h3 className="text-lg font-bold mb-2 text-indigo-200">
                             Session Overview
                           </h3>
-                          <p className="text-base text-[var(--text)]/70 leading-snug max-h-20 overflow-hidden">
+                          <p className="text-base text-white/60 leading-snug max-h-20 overflow-hidden">
                             {course?.summary ||
                               course?.description ||
                               "No summary available."}
                           </p>
-                          <div className="mt-8 p-4 bg-[var(--card)] rounded-xl border border-[var(--border)]">
+                          <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/5">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]/50">
+                              <span className="text-xs font-bold uppercase tracking-wider text-white/40">
                                 Overall Progress
                               </span>
-                              <span className="text-sm font-black text-indigo-500">
+                              <span className="text-sm font-black text-indigo-400">
                                 {progressPercentage}% Complete
                               </span>
                             </div>
-                            <div className="h-2 w-full bg-[var(--background)] rounded-full overflow-hidden border border-[var(--border)]">
+                            <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-indigo-500 transition-all duration-1000 ease-out"
                                 style={{ width: `${progressPercentage}%` }}
@@ -531,7 +533,7 @@ const CoursePlayerPage = () => {
                   </div>
                 </div>
               )}
-              <div className="text-[var(--text)]/60 leading-relaxed max-w-4xl tracking-wide">
+              <div className="text-white/40 leading-relaxed max-w-4xl">
                 <SafeMarkdown
                   text={
                     activeQuiz
@@ -549,37 +551,37 @@ const CoursePlayerPage = () => {
 
           {/* Sidebar (Right) */}
           <div
-            className={`bg-[var(--card)] border-l border-[var(--border)] transition-all duration-500 overflow-hidden flex flex-col shrink-0 ${
+            className={`bg-slate-900/95 backdrop-blur-xl border-l border-indigo-500/10 transition-all duration-500 overflow-hidden flex flex-col shrink-0 shadow-[-10px_0_30px_rgba(0,0,0,0.3)] ${
               sidebarOpen ? "w-[380px]" : "w-0"
             }`}
           >
-            <div className="p-5 border-b border-[var(--border)] flex flex-col gap-3 bg-[var(--card)] sticky top-0 z-10 whitespace-nowrap">
+            <div className="p-5 border-b border-indigo-500/10 flex flex-col gap-3 bg-gradient-to-br from-slate-800 to-slate-900 sticky top-0 z-10 whitespace-nowrap">
               <div className="flex items-center justify-between">
-                <h2 className="font-black text-sm tracking-widest uppercase text-indigo-500/80">
+                <h2 className="font-black text-sm tracking-widest uppercase text-indigo-300/80">
                   Curriculum
                 </h2>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="p-2 hover:bg-[var(--text)]/10 rounded-full transition-colors text-[var(--text)]/50 hover:text-[var(--text)]"
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
                 >
                   <FaTimes className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Global Progress Tracker */}
-              <div className="bg-[var(--background)] p-4 rounded-xl border border-[var(--border)]">
+              <div className="bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl border border-indigo-500/20 shadow-[inset_0_2px_10px_rgba(0,0,0,0.1)]">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text)]/40">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
                     <FaTrophy className="text-indigo-500/80" />
                     Your Completion
                   </div>
-                  <span className="text-xs font-black text-[var(--text)]/90">
+                  <span className="text-xs font-black text-white/90">
                     {progressPercentage}%
                   </span>
                 </div>
-                <div className="h-1.5 w-full bg-[var(--border)] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 transition-all duration-700 ease-out"
+                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]"
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>
