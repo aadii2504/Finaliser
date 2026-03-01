@@ -91,7 +91,9 @@ export const courseApi = {
   getBySlug: async (slug) => {
     try {
       const allCourses = await courseApi.getAll();
-      const course = allCourses.find((c) => c.slug === slug);
+      const course = allCourses.find(
+        (c) => c.slug === slug || c.id.toString() === slug,
+      );
       if (!course) throw new Error("Course not found");
       return course;
     } catch (e) {

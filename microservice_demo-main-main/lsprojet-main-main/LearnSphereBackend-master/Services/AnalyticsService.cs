@@ -57,50 +57,55 @@ public class AnalyticsService : IAnalyticsService
             .Where(a => a.JoinedAt >= a.LiveSession!.StartTime && a.JoinedAt <= a.LiveSession!.EndTime)
             .ToListAsync(ct);
 
-        var groupedData = enrollments
-            .GroupBy(e => e.StudentId)
-            .Select(g =>
-            {
-                var student = g.First().Student;
-                var studentAttendances = liveAttendances.Where(la => la.StudentId == g.Key).ToList();
-                
-                var details = g.Select(e => new StudentCourseDetailDto
-                {
-                    CourseId = e.CourseId,
-                    CourseTitle = e.Course?.Title ?? "Unknown",
-                    Grade = e.Grade,
-                    Score = e.Score,
-                    Status = e.Status,
-                    Compliance = e.Compliance,
-                    Attendance = e.Attendance
-                }).ToList();
-
-                foreach (var la in studentAttendances)
-                {
-                    details.Add(new StudentCourseDetailDto
-                    {
-                        CourseId = la.LiveSessionId + 1000000,
-                        CourseTitle = la.LiveSession?.Title ?? "Unknown Live Session",
-                        Grade = "NA",
-                        Score = null,
-                        Status = "Enrolled",
-                        Compliance = "Compliant",
-                        Attendance = la.JoinedAt.ToString("yyyy-MM-dd")
-                    });
-                }
-
-                return new StudentPerformanceDto
-                {
-                    StudentId = g.Key,
-                    StudentName = student != null ? student.FullName : "Unknown",
-                    StudentEmail = student != null ? student.Email : "",
-                    CoursesEnrolled = details.Count,
-                    Enrollments = details
-                };
-            })
+        var studentIds = enrollments.Select(e => e.StudentId)
+            .Concat(liveAttendances.Select(l => l.StudentId))
+            .Distinct()
             .ToList();
 
-        return groupedData;
+        var result = new List<StudentPerformanceDto>();
+
+        foreach(var sId in studentIds)
+        {
+            var studentEnrs = enrollments.Where(e => e.StudentId == sId).ToList();
+            var studentAtts = liveAttendances.Where(la => la.StudentId == sId).ToList();
+            var student = studentEnrs.FirstOrDefault()?.Student ?? studentAtts.FirstOrDefault()?.Student;
+
+            var details = studentEnrs.Select(e => new StudentCourseDetailDto
+            {
+                CourseId = e.CourseId,
+                CourseTitle = e.Course?.Title ?? "Unknown",
+                Grade = e.Grade,
+                Score = e.Score,
+                Status = e.Status,
+                Compliance = e.Compliance,
+                Attendance = e.Attendance
+            }).ToList();
+
+            foreach (var la in studentAtts)
+            {
+                details.Add(new StudentCourseDetailDto
+                {
+                    CourseId = la.LiveSessionId + 1000000,
+                    CourseTitle = la.LiveSession?.Title ?? "Unknown Live Session",
+                    Grade = "NA",
+                    Score = null,
+                    Status = "Enrolled",
+                    Compliance = "Compliant",
+                    Attendance = la.JoinedAt.ToString("yyyy-MM-dd")
+                });
+            }
+
+            result.Add(new StudentPerformanceDto
+            {
+                StudentId = sId,
+                StudentName = student != null ? student.FullName : "Unknown",
+                StudentEmail = student != null ? student.Email : "",
+                CoursesEnrolled = details.Count,
+                Enrollments = details
+            });
+        }
+
+        return result;
     }
 
     public async Task<List<CoursePerformanceDto>> GetCoursePerformanceAsync(CancellationToken ct = default)

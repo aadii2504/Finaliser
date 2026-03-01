@@ -77,12 +77,16 @@ export const DashboardPage = () => {
 
         // Transform backend dates and set isLive based on current time
         const now = new Date();
-        const mappedSessions = (liveData || []).map((s) => ({
-          ...s,
-          isLive:
-            now >= normalizeDate(s.startTime) &&
-            now <= normalizeDate(s.endTime),
-        }));
+        const mappedSessions = (liveData || []).map((s) => {
+          const start = normalizeDate(s.startTime);
+          const end = normalizeDate(s.endTime);
+          return {
+            ...s,
+            isLive: now >= start && now <= end,
+            isUpcoming: now < start,
+            isEnded: now > end,
+          };
+        });
         setLiveSessions(mappedSessions);
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
@@ -260,9 +264,17 @@ export const DashboardPage = () => {
                     }}
                     aria-label={s.title}
                   >
-                    {s.isLive && (
-                      <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-white bg-red-600">
+                    {s.isLive ? (
+                      <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold text-white bg-red-600 animate-pulse">
                         ● LIVE
+                      </span>
+                    ) : s.isUpcoming ? (
+                      <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold text-white bg-indigo-500">
+                        UPCOMING
+                      </span>
+                    ) : (
+                      <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold text-white bg-slate-600">
+                        ENDED
                       </span>
                     )}
                   </div>
@@ -270,25 +282,41 @@ export const DashboardPage = () => {
                     <h4 className="text-xs sm:text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition">
                       {s.title}
                     </h4>
-                    <p className="mt-1 text-xs opacity-70">Live Session</p>
-                    {!s.isLive && (
-                      <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold mt-2 bg-white/10 border border-white/20">
-                        Upcoming
-                      </span>
-                    )}
+                    <p className="mt-1 text-xs opacity-70 mb-2">Live Session</p>
+
                     <div className="mt-3 flex items-center gap-2">
-                      <Link
-                        to={`/session/${s.id}`}
-                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 transition"
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          if (!s.isEnded && !s.isUpcoming) {
+                            try {
+                              await liveSessionApi.join(s.id);
+                            } catch (err) {
+                              console.error("Attendance fail:", err);
+                            }
+                          }
+                          window.location.href = `/session/${s.id}`;
+                        }}
+                        className={`rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-white transition-all ${
+                          s.isEnded
+                            ? "bg-white/5 border border-white/10 hover:bg-white/10 text-white/60"
+                            : "bg-gradient-to-tr from-indigo-600 to-blue-500 hover:opacity-90 shadow-md"
+                        }`}
                       >
-                        {s.isLive ? "Join now" : "Set reminder"}
-                      </Link>
-                      <Link
-                        to={`/session/${s.id}`}
-                        className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
-                      >
-                        Details
-                      </Link>
+                        {s.isEnded
+                          ? "View Recording"
+                          : s.isLive
+                            ? "Join now"
+                            : "Join Session"}
+                      </button>
+                      {!s.isEnded && (
+                        <Link
+                          to={`/session/${s.id}`}
+                          className="rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold border border-white/20 hover:bg-white/10 transition"
+                        >
+                          Details
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </article>
