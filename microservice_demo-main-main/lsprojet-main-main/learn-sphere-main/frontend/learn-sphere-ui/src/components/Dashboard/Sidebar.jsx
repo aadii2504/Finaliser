@@ -13,12 +13,13 @@ export default function Sidebar({ enrolledCount = 0 }) {
   const [expanded, setExpanded] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(true);
 
-  // Styles (theme-frienwq
-  // dly)
+  // Styles (theme-friendly)
   const linkBase =
-    "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors";
-  const linkActive = "bg-white/10 text-[var(--text)]";
-  const linkInactive = "text-[var(--text)] hover:bg-white/5";
+    "group flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-medium transition-all duration-300 border border-transparent";
+  const linkActive =
+    "bg-indigo-600/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border-indigo-500/20 shadow-sm";
+  const linkInactive =
+    "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white";
   const navClass = ({ isActive }) =>
     `${linkBase} ${isActive ? linkActive : linkInactive}`;
 
@@ -174,35 +175,11 @@ export default function Sidebar({ enrolledCount = 0 }) {
                 )}
               </li>
 
-              {/* Quizzes */}
-              <li>
-                <NavLink to="/quizzes" className={navClass}>
-                  <Icon path={ICONS.quizzes} />
-                  <Label>Quizzes</Label>
-                </NavLink>
-              </li>
-
-              {/* Assignments */}
-              <li>
-                <NavLink to="/assignments" className={navClass}>
-                  <Icon path={ICONS.assignments} />
-                  <Label>Assignments</Label>
-                </NavLink>
-              </li>
-
               {/* Community Help */}
               <li>
                 <NavLink to="/community" className={navClass}>
                   <Icon path={ICONS.community} />
                   <Label>Community Help</Label>
-                </NavLink>
-              </li>
-
-              {/* Live Sessions */}
-              <li>
-                <NavLink to="/live-sessions" className={navClass}>
-                  <Icon path={ICONS.live} />
-                  <Label>Live Sessions</Label>
                 </NavLink>
               </li>
             </ul>

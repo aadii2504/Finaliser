@@ -64,10 +64,12 @@ const LiveSessionsPage = () => {
           const data = await liveSessionApi.getAll();
           const now = new Date();
           const mapped = (data || []).map((s) => {
+            const start = normalizeDate(s.startTime);
             const end = normalizeDate(s.endTime);
             return {
               ...s,
-              isLive: now >= normalizeDate(s.startTime) && now <= end,
+              isUpcoming: now < start,
+              isLive: now >= start && now <= end,
               isPassed: now > end,
             };
           });
@@ -174,6 +176,16 @@ const LiveSessionsPage = () => {
                     LIVE
                   </span>
                 )}
+                {session.isUpcoming && (
+                  <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-blue-600 shadow-md">
+                    UPCOMING
+                  </span>
+                )}
+                {session.isPassed && (
+                  <span className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black text-white bg-gray-600 opacity-80">
+                    ENDED
+                  </span>
+                )}
               </div>
               <div className="p-5">
                 <h4 className="text-base font-bold line-clamp-2 mb-1">
@@ -205,8 +217,11 @@ const LiveSessionsPage = () => {
 
                 <div className="flex items-center gap-2 mt-2">
                   <button
+                    disabled={session.isUpcoming}
                     onClick={async (e) => {
-                      if (!session.isPassed) {
+                      if (session.isUpcoming) return;
+                      // Only mark attendance if they join during LIVE phase
+                      if (session.isLive && !session.isPassed) {
                         try {
                           await liveSessionApi.join(session.id);
                         } catch (err) {
@@ -216,12 +231,18 @@ const LiveSessionsPage = () => {
                       window.location.href = `/session/${session.id}`;
                     }}
                     className={`flex-1 text-center rounded-xl px-3 py-3 text-[11px] font-black uppercase tracking-wider transition-all ${
-                      !session.isPassed
+                      session.isLive
                         ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500"
-                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                        : session.isUpcoming
+                          ? "bg-blue-600/40 text-white/50 cursor-not-allowed border border-blue-500/20"
+                          : "bg-white/5 text-white/60 hover:bg-white/10"
                     }`}
                   >
-                    {session.isPassed ? "View Recording" : "Join Now"}
+                    {session.isUpcoming
+                      ? "Starts Soon"
+                      : session.isPassed
+                        ? "View Recording"
+                        : "Join Now"}
                   </button>
                 </div>
               </div>

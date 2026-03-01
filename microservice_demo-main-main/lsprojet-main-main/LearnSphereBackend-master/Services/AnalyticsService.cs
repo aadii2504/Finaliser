@@ -56,12 +56,15 @@ public class AnalyticsService : IAnalyticsService
             .Include(a => a.Student)
             .ToListAsync(ct);
 
+        var liveSessions = await _db.LiveSessions.ToListAsync(ct);
+
         var groupedData = enrollments
             .GroupBy(e => e.StudentId)
             .Select(g =>
             {
                 var student = g.First().Student;
                 var studentAttendances = liveAttendances.Where(la => la.StudentId == g.Key).ToList();
+                var enrolledCourseIds = g.Select(e => e.CourseId).ToHashSet();
                 
                 var details = g.Select(e => new StudentCourseDetailDto
                 {
@@ -74,17 +77,22 @@ public class AnalyticsService : IAnalyticsService
                     Attendance = e.Attendance
                 }).ToList();
 
-                foreach (var la in studentAttendances)
+                var eligibleLiveSessions = liveSessions.Where(ls => 
+                    !ls.CourseId.HasValue || enrolledCourseIds.Contains(ls.CourseId.Value)).ToList();
+
+                foreach (var ls in eligibleLiveSessions)
                 {
+                    var attendance = studentAttendances.FirstOrDefault(a => a.LiveSessionId == ls.Id);
+                    
                     details.Add(new StudentCourseDetailDto
                     {
-                        CourseId = la.LiveSessionId + 1000000,
-                        CourseTitle = la.LiveSession?.Title ?? "Unknown Live Session",
+                        CourseId = ls.Id + 1000000,
+                        CourseTitle = ls.Title ?? "Unknown Live Session",
                         Grade = "NA",
                         Score = null,
-                        Status = "Completed",
-                        Compliance = "Compliant",
-                        Attendance = la.JoinedAt.ToString("yyyy-MM-dd")
+                        Status = attendance != null ? "Attended" : "Enrolled",
+                        Compliance = "NA",
+                        Attendance = attendance != null ? attendance.JoinedAt.ToString("yyyy-MM-dd") : "-"
                     });
                 }
 
